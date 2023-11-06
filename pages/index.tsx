@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
-import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
+import { Collapse, Select, Spacer, Spinner, Tag, Text } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
@@ -16,6 +16,7 @@ export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
   useEffect(() => {
     if (userId) {
@@ -23,7 +24,7 @@ export default function Home(props: { users: Array<any> }) {
       fetch(`/api/shifts?uid=${userId}`)
         .then((res) => res.json())
         .then((data) => {
-          // console.log(data);
+          console.log(data);
           localStorage.setItem("salit-uid", userId);
           setShifts(data.shifts);
           setLoading(false);
@@ -39,6 +40,53 @@ export default function Home(props: { users: Array<any> }) {
       setUserId(uid);
     }
   }, []);
+
+  const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
+    if (props.shifts.length === 0) {
+      return <NoShifts />;
+    }
+    return (
+      <Collapse.Group className={styles.shiftsContainer}>
+        {props.shifts &&
+          props.shifts.map((shift) => (
+            <Shift
+              key={shift.id}
+              shift={shift}
+              type={identifyShift(shift, userId)}
+            />
+          ))}
+      </Collapse.Group>
+    );
+  };
+
+  const Shift = (props: { shift: PageObjectResponse; type: TShift }) => {
+    const time =
+      props.shift.properties["זמן"].type == "date" &&
+      props.shift.properties["זמן"].date;
+    const subtitle =
+      time &&
+      `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
+        time.start
+      )} (${toRelativeTime(time.start)})`;
+    const title = `${props.type.emoji} ${props.type.name}`;
+    const relation = props.shift.properties[props.type.name];
+    const participants =
+      relation.type === "relation" &&
+      (relation.relation.map(
+        (p) => allUsers.find((u) => u.id === p.id).username
+      ) as Array<string>);
+    return (
+      <Collapse title={title} subtitle={subtitle}>
+        {participants && participants.length === 2 && (
+          <>
+            <Tag type="success">{participants[0]}</Tag>
+            <Spacer inline w={0.5} />
+            <Tag type="success">{participants[1]}</Tag>
+          </>
+        )}
+      </Collapse>
+    );
+  };
 
   return (
     <>
@@ -64,7 +112,7 @@ export default function Home(props: { users: Array<any> }) {
             </Select.Option>
           ))}
         </Select>
-        {loading ? <Loader /> : <Shifts shifts={shifts} userId={userId} />}
+        {loading ? <Loader /> : <Shifts shifts={shifts} />}
       </main>
     </>
   );
@@ -85,44 +133,6 @@ const NoShifts = () => {
       <Text h1>🏝️</Text>
       <Text h3>אין משמרות</Text>
     </>
-  );
-};
-
-const Shifts = (props: {
-  shifts: Array<PageObjectResponse>;
-  userId: string;
-}) => {
-  if (props.shifts.length === 0) {
-    return <NoShifts />;
-  }
-  return (
-    <Collapse.Group className={styles.shiftsContainer}>
-      {props.shifts &&
-        props.shifts.map((shift) => (
-          <Shift
-            key={shift.id}
-            shift={shift}
-            type={identifyShift(shift, props.userId)}
-          />
-        ))}
-    </Collapse.Group>
-  );
-};
-
-const Shift = (props: { shift: PageObjectResponse; type: TShift }) => {
-  const time =
-    props.shift.properties["זמן"].type == "date" &&
-    props.shift.properties["זמן"].date;
-  const subtitle =
-    time &&
-    `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
-      time.start
-    )} (${toRelativeTime(time.start)})`;
-  const title = `${props.type.emoji} ${props.type.name}`;
-  return (
-    <Collapse title={title} subtitle={subtitle}>
-      <Text>{props.type.name}</Text>
-    </Collapse>
   );
 };
 
