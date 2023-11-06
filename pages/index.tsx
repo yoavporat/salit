@@ -39,7 +39,10 @@ export default function Home(props: { users: Array<any> }) {
       </Head>
       <main className={`${styles.main}`}>
         <Text h1>רשימת שמירה</Text>
-        <Select placeholder="Choose one" onChange={(e) => setUserId(e)}>
+        <Select
+          placeholder="Choose one"
+          onChange={(e) => setUserId(e as string)}
+        >
           {props.users.map((user) => (
             <Select.Option key={user.id} value={user.id}>
               {user.username}
@@ -63,10 +66,14 @@ export default function Home(props: { users: Array<any> }) {
 }
 
 const Shift = (props: { shift: PageObjectResponse; type: TShift }) => {
-  const time = props.shift.properties["זמן"].date;
-  const subtitle = `${toDate(time.start)} @ ${toTime(time.end)} - ${toTime(
-    time.start
-  )} (${toRelativeTime(time.start)})`;
+  const time =
+    props.shift.properties["זמן"].type == "date" &&
+    props.shift.properties["זמן"].date;
+  const subtitle =
+    time &&
+    `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
+      time.start
+    )} (${toRelativeTime(time.start)})`;
   const title = `${props.type.emoji} ${props.type.name}`;
   return (
     <Collapse title={title} subtitle={subtitle}>

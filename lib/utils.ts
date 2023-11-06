@@ -36,13 +36,22 @@ export function identifyShift(
   shift: PageObjectResponse,
   userId: string
 ): TShift {
-  if (shift.properties["סיור"].relation.some((user) => user.id === userId)) {
+  if (
+    shift.properties["סיור"].type == "relation" &&
+    shift.properties["סיור"].relation.some((user) => user.id === userId)
+  ) {
     return { type: "patrol", name: "סיור", emoji: "🚔" };
   }
-  if (shift.properties["מזרחי"].relation.some((user) => user.id === userId)) {
+  if (
+    shift.properties["מזרחי"].type == "relation" &&
+    shift.properties["מזרחי"].relation.some((user) => user.id === userId)
+  ) {
     return { type: "east", name: "מזרחי", emoji: "🕌" };
   }
-  if (shift.properties["פרחים"].relation.some((user) => user.id === userId)) {
+  if (
+    shift.properties["פרחים"].type == "relation" &&
+    shift.properties["פרחים"].relation.some((user) => user.id === userId)
+  ) {
     return { type: "flowers", name: "פרחים", emoji: "🌷" };
   }
   return { type: "gate", name: "ש״ג", emoji: "🚧" };
