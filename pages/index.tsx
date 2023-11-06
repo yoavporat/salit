@@ -103,7 +103,7 @@ export default function Home(props: { users: Array<any> }) {
   };
 
   const NextShift = () => {
-    const shift = shifts[0];
+    const shift: PageObjectResponse = shifts[0];
     const time =
       shift.properties["זמן"].type == "date" && shift.properties["זמן"].date;
     const type = identifyShift(shift, userId);
@@ -113,6 +113,11 @@ export default function Home(props: { users: Array<any> }) {
       (relation.relation.map(
         (p) => allUsers.find((u) => u.id === p.id).username
       ) as Array<string>);
+    const timeString =
+      time &&
+      `${toTime(time.end as string)} - ${toTime(time.start)} (${toRelativeTime(
+        time.start
+      )})`;
 
     return (
       <Card width="70%" type="success">
@@ -125,9 +130,7 @@ export default function Home(props: { users: Array<any> }) {
         <Divider h="1px" my={0} />
         <Card.Content>
           <Text h3>{type.name}</Text>
-          <Text h5>{`${toTime(time.end as string)} - ${toTime(
-            time.start
-          )} (${toRelativeTime(time.start)})`}</Text>
+          <Text h5>{timeString}</Text>
           {participants && participants.length === 2 && (
             <>
               <Tag invert>{participants[0]}</Tag>
