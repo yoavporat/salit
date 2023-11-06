@@ -74,6 +74,18 @@ export class Notion {
                   contains: userId,
                 },
               },
+              {
+                property: "ש״ג",
+                relation: {
+                  contains: userId,
+                },
+              },
+              {
+                property: "רחפן",
+                relation: {
+                  contains: userId,
+                },
+              },
             ],
           },
         ],

@@ -1,15 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
-import {
-  Collapse,
-  Divider,
-  Loading,
-  Select,
-  Spacer,
-  Spinner,
-  Text,
-} from "@geist-ui/core";
+import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
@@ -73,17 +65,6 @@ export default function Home(props: { users: Array<any> }) {
           ))}
         </Select>
         {loading ? <Loader /> : <Shifts shifts={shifts} userId={userId} />}
-        {/* <Collapse.Group className={styles.shiftsContainer}>
-          {shifts &&
-            shifts.map((shift) => (
-              <Shift
-                key={shift.id}
-                shift={shift}
-                type={identifyShift(shift, userId)}
-              />
-            ))}
-        </Collapse.Group> */}
-        {/* {shifts.length === 0 && !loading && <NoShifts />} */}
       </main>
     </>
   );
