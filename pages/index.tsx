@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import {
   TShift,
+  getShiftParticipents,
   identifyShift,
   toDate,
   toRelativeTime,
@@ -82,22 +83,10 @@ export default function Home(props: { users: Array<any> }) {
         time.start
       )} (${toRelativeTime(time.start)})`;
     const title = `${props.type.emoji} ${props.type.name}`;
-    const relation = props.shift.properties[props.type.name];
-    const participants =
-      relation.type === "relation" &&
-      (relation.relation.map(
-        (p) => allUsers.find((u) => u.id === p.id).username
-      ) as Array<string>);
 
     return (
       <Collapse title={title} subtitle={subtitle}>
-        {participants && participants.length === 2 && (
-          <>
-            <Tag type="success">{participants[0]}</Tag>
-            <Spacer inline w={0.5} />
-            <Tag type="success">{participants[1]}</Tag>
-          </>
-        )}
+        <Participents shift={props.shift} />
       </Collapse>
     );
   };
@@ -107,12 +96,6 @@ export default function Home(props: { users: Array<any> }) {
     const time =
       shift.properties["זמן"].type == "date" && shift.properties["זמן"].date;
     const type = identifyShift(shift, userId);
-    const relation = shift.properties[type.name];
-    const participants =
-      relation.type === "relation" &&
-      (relation.relation.map(
-        (p) => allUsers.find((u) => u.id === p.id).username
-      ) as Array<string>);
     const timeString =
       time &&
       `${toTime(time.end as string)} - ${toTime(time.start)} (${toRelativeTime(
@@ -120,7 +103,7 @@ export default function Home(props: { users: Array<any> }) {
       )})`;
 
     return (
-      <Card width="70%" type="success">
+      <Card width="80%" type="success">
         <Card.Content className={`${styles.cardHeader}`}>
           <Text b my={0}>
             המשמרת הבאה
@@ -131,15 +114,59 @@ export default function Home(props: { users: Array<any> }) {
         <Card.Content>
           <Text h3>{type.name}</Text>
           <Text h5>{timeString}</Text>
-          {participants && participants.length === 2 && (
-            <>
-              <Tag invert>{participants[0]}</Tag>
-              <Spacer inline w={0.5} />
-              <Tag invert>{participants[1]}</Tag>
-            </>
-          )}
+          <Participents shift={shift} />
         </Card.Content>
       </Card>
+    );
+  };
+
+  const Participents = (props: { shift: PageObjectResponse }) => {
+    const patrol = getShiftParticipents(props.shift, "סיור", allUsers);
+    const flowers = getShiftParticipents(props.shift, "פרחים", allUsers);
+    const east = getShiftParticipents(props.shift, "מזרחי", allUsers);
+    const gate = getShiftParticipents(props.shift, "ש״ג", allUsers);
+
+    return (
+      <>
+        {patrol && patrol.length > 0 && (
+          <div className={`${styles.shiftEntry}`}>
+            <Text p b>
+              סיור
+            </Text>
+            <div className={`${styles.tagsWrapper}`}>
+              <Tag invert>{patrol[0]}</Tag>
+              <Tag invert>{patrol[1]}</Tag>
+            </div>
+          </div>
+        )}
+        {east && east.length > 0 && (
+          <div className={`${styles.shiftEntry}`}>
+            <Text p b>
+              מזרחי
+            </Text>
+            <div className={`${styles.tagsWrapper}`}>
+              <Tag invert>{east[0]}</Tag>
+              <Tag invert>{east[1]}</Tag>
+            </div>
+          </div>
+        )}
+        {flowers && flowers.length > 0 && (
+          <div className={`${styles.shiftEntry}`}>
+            <Text p b>
+              פרחים
+            </Text>
+            <Tag invert>{flowers[0]}</Tag>
+          </div>
+        )}
+        {gate && gate.length > 0 && (
+          <div className={`${styles.shiftEntry}`}>
+            <Text p b>
+              ש״ג
+            </Text>
+            <Tag invert>{gate[0]}</Tag>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -151,11 +178,11 @@ export default function Home(props: { users: Array<any> }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main}`}>
-        <Text h1>רשימת שמירה</Text>
+        <Text h2>רשימת שמירה</Text>
         <Select
           placeholder="שם"
           onChange={(e) => setUserId(e as string)}
-          width="65%"
+          width="75%"
           height="40px"
           value={userId}
           clearable

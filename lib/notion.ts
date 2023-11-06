@@ -1,5 +1,6 @@
 import { Client, isFullPage } from "@notionhq/client";
 import { TitlePropertyItemObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { TUser } from "./utils";
 
 const ShiftsDB = "2564fd1207ab415386bac64fbb17a46c";
 const SadakDB = "b43d42afe4aa47d7ba2b863c4415e977";
@@ -11,14 +12,7 @@ export class Notion {
     this.client = new Client({ auth: process.env.NOTION_TOKEN });
   }
 
-  async getDatabase() {
-    const response = await this.client.databases.retrieve({
-      database_id: SadakDB,
-    });
-    console.log(response);
-  }
-
-  async getAllUsers() {
+  async getAllUsers(): Promise<TUser[]> {
     const response = await this.client.databases.query({
       database_id: SadakDB,
       sorts: [
@@ -28,6 +22,7 @@ export class Notion {
         },
       ],
     });
+
     return response.results.map((user) => {
       if (
         user.object === "page" &&
@@ -39,11 +34,10 @@ export class Notion {
           id: user.id,
         };
       }
-    });
+    }) as TUser[];
   }
 
   async getUserShifts(userId: string) {
-    console.log({ userId });
     const response = await this.client.databases.query({
       database_id: ShiftsDB,
       filter: {
