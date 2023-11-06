@@ -34,8 +34,8 @@ export default function Home(props: { users: Array<any> }) {
           // console.log(data);
           localStorage.setItem("salit-uid", userId);
           setShifts(data.shifts);
+          setLoading(false);
         });
-      setLoading(false);
     } else {
       setShifts([]);
     }
@@ -72,8 +72,8 @@ export default function Home(props: { users: Array<any> }) {
             </Select.Option>
           ))}
         </Select>
-        {loading && <Loader />}
-        <Collapse.Group className={styles.shiftsContainer}>
+        {loading ? <Loader /> : <Shifts shifts={shifts} userId={userId} />}
+        {/* <Collapse.Group className={styles.shiftsContainer}>
           {shifts &&
             shifts.map((shift) => (
               <Shift
@@ -82,8 +82,8 @@ export default function Home(props: { users: Array<any> }) {
                 type={identifyShift(shift, userId)}
               />
             ))}
-        </Collapse.Group>
-        {shifts.length === 0 && !loading && <NoShifts />}
+        </Collapse.Group> */}
+        {/* {shifts.length === 0 && !loading && <NoShifts />} */}
       </main>
     </>
   );
@@ -104,6 +104,27 @@ const NoShifts = () => {
       <Text h1>🏝️</Text>
       <Text h3>אין משמרות</Text>
     </>
+  );
+};
+
+const Shifts = (props: {
+  shifts: Array<PageObjectResponse>;
+  userId: string;
+}) => {
+  if (props.shifts.length === 0) {
+    return <NoShifts />;
+  }
+  return (
+    <Collapse.Group className={styles.shiftsContainer}>
+      {props.shifts &&
+        props.shifts.map((shift) => (
+          <Shift
+            key={shift.id}
+            shift={shift}
+            type={identifyShift(shift, props.userId)}
+          />
+        ))}
+    </Collapse.Group>
   );
 };
 
