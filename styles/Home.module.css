@@ -13,3 +13,13 @@ div.shiftsContainer {
   gap: 1rem;
   width: 90% !important;
 }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardHeader p {
+  margin: 0;
+}
