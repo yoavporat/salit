@@ -35,4 +35,50 @@ export class Notion {
       }
     });
   }
+
+  async getUserShifts(userId: string) {
+    console.log({ userId });
+    const response = await this.client.databases.query({
+      database_id: ShiftsDB,
+      filter: {
+        and: [
+          {
+            property: "זמן",
+            date: {
+              after: new Date().toISOString(),
+            },
+          },
+          {
+            or: [
+              {
+                property: "סיור",
+                relation: {
+                  contains: userId,
+                },
+              },
+              {
+                property: "מזרחי",
+                relation: {
+                  contains: userId,
+                },
+              },
+              {
+                property: "פרחים",
+                relation: {
+                  contains: userId,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      sorts: [
+        {
+          property: "זמן",
+          direction: "ascending",
+        },
+      ],
+    });
+    return response.results;
+  }
 }
