@@ -4,6 +4,7 @@
   align-items: center;
   min-height: 100vh;
   padding-block-start: 24px;
+  gap: 24px;
 }
 
 div.shiftsContainer {
@@ -11,13 +12,4 @@ div.shiftsContainer {
   flex-direction: column;
   gap: 1rem;
   width: 90% !important;
-}
-
-.card {
-  width: 100%;
-}
-
-.cardContent {
-  display: flex;
-  gap: 0.5rem;
 }

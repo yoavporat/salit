@@ -21,6 +21,12 @@ export class Notion {
   async getAllUsers() {
     const response = await this.client.databases.query({
       database_id: SadakDB,
+      sorts: [
+        {
+          property: "Name",
+          direction: "ascending",
+        },
+      ],
     });
     return response.results.map((user) => {
       if (
