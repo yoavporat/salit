@@ -6,6 +6,12 @@ export type TShift = {
   emoji: string;
 };
 
+export type TShiftParticipents = TShift & Array<string>;
+export type TUser = {
+  username: string;
+  id: string;
+};
+
 export function toDate(date: string) {
   const options: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -61,4 +67,18 @@ export function identifyShift(
     return { type: "drone", name: "רחפן", emoji: "✈️" };
   }
   return { type: "gate", name: "ש״ג", emoji: "🚧" };
+}
+
+export function getShiftParticipents(
+  shift: PageObjectResponse,
+  type: string,
+  allUsers: TUser[]
+) {
+  const relation = shift.properties[type];
+  return (
+    relation.type === "relation" &&
+    (relation.relation.map(
+      (p) => allUsers.find((u) => u.id === p.id)?.username
+    ) as Array<string>)
+  );
 }
