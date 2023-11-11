@@ -80,6 +80,12 @@ export class Notion {
                   contains: userId,
                 },
               },
+              {
+                property: "בית ספר",
+                relation: {
+                  contains: userId,
+                },
+              },
             ],
           },
         ],

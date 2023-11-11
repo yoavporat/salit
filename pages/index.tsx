@@ -125,6 +125,7 @@ export default function Home(props: { users: Array<any> }) {
     const flowers = getShiftParticipents(props.shift, "פרחים", allUsers);
     const east = getShiftParticipents(props.shift, "מזרחי", allUsers);
     const gate = getShiftParticipents(props.shift, "ש״ג", allUsers);
+    const school = getShiftParticipents(props.shift, "בית ספר", allUsers);
 
     return (
       <>
@@ -164,6 +165,14 @@ export default function Home(props: { users: Array<any> }) {
               ש״ג
             </Text>
             <Tag invert>{gate[0]}</Tag>
+          </div>
+        )}
+        {school && school.length > 0 && (
+          <div className={`${styles.shiftEntry}`}>
+            <Text p b>
+              בית ספר
+            </Text>
+            <Tag invert>{school[0]}</Tag>
           </div>
         )}
       </>
