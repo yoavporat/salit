@@ -158,7 +158,7 @@ export default function Home(props: { users: Array<any> }) {
             </Text>
             <div className={`${styles.tagsWrapper}`}>
               <Tag type="lite">{flowers[0]}</Tag>
-              <Tag type="lite">{flowers[1]}</Tag>
+              {flowers[1] && <Tag type="lite">{flowers[1]}</Tag>}
             </div>
           </div>
         )}
@@ -167,7 +167,10 @@ export default function Home(props: { users: Array<any> }) {
             <Text p b>
               ש״ג
             </Text>
-            <Tag type="lite">{gate[0]}</Tag>
+            <div className={`${styles.tagsWrapper}`}>
+              <Tag type="lite">{gate[0]}</Tag>
+              {gate[1] && <Tag type="lite">{gate[1]}</Tag>}
+            </div>
           </div>
         )}
         {school && school.length > 0 && (
