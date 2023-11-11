@@ -207,12 +207,12 @@ export default function Home(props: { users: Array<any> }) {
           placeholder="שם"
           onChange={(e) => setUserId(e as string)}
           width="75%"
-          height="40px"
+          height="50px"
           value={userId}
           clearable
         >
           {props.users.map((user) => (
-            <Select.Option key={user.id} value={user.id}>
+            <Select.Option key={user.id} value={user.id} font={2}>
               {user.username}
             </Select.Option>
           ))}
