@@ -135,8 +135,8 @@ export default function Home(props: { users: Array<any> }) {
               סיור
             </Text>
             <div className={`${styles.tagsWrapper}`}>
-              <Tag invert>{patrol[0]}</Tag>
-              <Tag invert>{patrol[1]}</Tag>
+              <Tag type="lite">{patrol[0]}</Tag>
+              <Tag type="lite">{patrol[1]}</Tag>
             </div>
           </div>
         )}
@@ -146,8 +146,8 @@ export default function Home(props: { users: Array<any> }) {
               מזרחי
             </Text>
             <div className={`${styles.tagsWrapper}`}>
-              <Tag invert>{east[0]}</Tag>
-              <Tag invert>{east[1]}</Tag>
+              <Tag type="lite">{east[0]}</Tag>
+              <Tag type="lite">{east[1]}</Tag>
             </div>
           </div>
         )}
@@ -156,7 +156,10 @@ export default function Home(props: { users: Array<any> }) {
             <Text p b>
               פרחים
             </Text>
-            <Tag invert>{flowers[0]}</Tag>
+            <div className={`${styles.tagsWrapper}`}>
+              <Tag type="lite">{flowers[0]}</Tag>
+              <Tag type="lite">{flowers[1]}</Tag>
+            </div>
           </div>
         )}
         {gate && gate.length > 0 && (
@@ -164,7 +167,7 @@ export default function Home(props: { users: Array<any> }) {
             <Text p b>
               ש״ג
             </Text>
-            <Tag invert>{gate[0]}</Tag>
+            <Tag type="lite">{gate[0]}</Tag>
           </div>
         )}
         {school && school.length > 0 && (
@@ -172,7 +175,7 @@ export default function Home(props: { users: Array<any> }) {
             <Text p b>
               בית ספר
             </Text>
-            <Tag invert>{school[0]}</Tag>
+            <Tag type="lite">{school[0]}</Tag>
           </div>
         )}
       </>
