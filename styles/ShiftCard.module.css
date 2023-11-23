@@ -1,0 +1,9 @@
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardHeader p {
+  margin: 0;
+}
