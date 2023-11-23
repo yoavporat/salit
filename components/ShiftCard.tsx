@@ -13,18 +13,23 @@ interface IProps {
 export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
   const time =
     shift.properties["זמן"].type == "date" && shift.properties["זמן"].date;
+  if (!time) {
+    return null;
+  }
+
   const type = identifyShift(shift, userId);
-  const timeString =
-    time &&
-    `${toTime(time.end as string)} - ${toTime(time.start)} (${toRelativeTime(
-      time.start
-    )})`;
+  const isLive = new Date(time.start) < new Date();
+  const end = time.end as string;
+  const timeString = `${toTime(end)} - ${toTime(time.start)} (${toRelativeTime(
+    isLive ? end : time.start
+  )})`;
+  const title = isLive ? "המשמרת הנוכחית" : "המשמרת הבאה";
 
   return (
-    <Card width="80%" type="success">
+    <Card width="80%" type={isLive ? "violet" : "success"}>
       <Card.Content className={`${styles.cardHeader}`}>
         <Text b my={0}>
-          המשמרת הבאה
+          {title}
         </Text>
         <Text>{type.emoji}</Text>
       </Card.Content>
