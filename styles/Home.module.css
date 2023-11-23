@@ -13,36 +13,3 @@ div.shiftsContainer {
   gap: 1rem;
   width: 90% !important;
 }
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.cardHeader p {
-  margin: 0;
-}
-
-footer.cardFooter {
-  flex-direction: column;
-  padding: 0;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.shiftEntry {
-  display: flex;
-  margin: 8px 0;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.shiftEntry p {
-  margin: 0;
-}
-
-.tagsWrapper {
-  display: flex;
-  gap: 8px;
-}

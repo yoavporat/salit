@@ -1,26 +1,18 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
-import {
-  Card,
-  Collapse,
-  Divider,
-  Select,
-  Spacer,
-  Spinner,
-  Tag,
-  Text,
-} from "@geist-ui/core";
+import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
-  getShiftParticipents,
   identifyShift,
   toDate,
   toRelativeTime,
   toTime,
 } from "@/lib/utils";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { Participents } from "@/components/Participants";
+import { ShiftCard } from "@/components/ShiftCard";
 
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
@@ -56,7 +48,7 @@ export default function Home(props: { users: Array<any> }) {
     }
     return (
       <>
-        <NextShift />
+        <ShiftCard shift={shifts[0]} userId={userId} allUsers={allUsers} />
         <Collapse.Group className={styles.shiftsContainer}>
           {props.shifts &&
             props.shifts
@@ -86,111 +78,8 @@ export default function Home(props: { users: Array<any> }) {
 
     return (
       <Collapse title={title} subtitle={subtitle}>
-        <Participents shift={props.shift} />
+        <Participents shift={props.shift} allUsers={allUsers} />
       </Collapse>
-    );
-  };
-
-  const NextShift = () => {
-    const shift: PageObjectResponse = shifts[0];
-    const time =
-      shift.properties["זמן"].type == "date" && shift.properties["זמן"].date;
-    const type = identifyShift(shift, userId);
-    const timeString =
-      time &&
-      `${toTime(time.end as string)} - ${toTime(time.start)} (${toRelativeTime(
-        time.start
-      )})`;
-
-    return (
-      <Card width="80%" type="success">
-        <Card.Content className={`${styles.cardHeader}`}>
-          <Text b my={0}>
-            המשמרת הבאה
-          </Text>
-          <Text>{type.emoji}</Text>
-        </Card.Content>
-        <Divider h="1px" my={0} />
-        <Card.Content>
-          <Text h3>{type.name}</Text>
-          <Text h5>{timeString}</Text>
-          <Participents shift={shift} />
-        </Card.Content>
-      </Card>
-    );
-  };
-
-  const Participents = (props: { shift: PageObjectResponse }) => {
-    const patrol = getShiftParticipents(props.shift, "סיור", allUsers);
-    const flowers = getShiftParticipents(props.shift, "פרחים", allUsers);
-    const east = getShiftParticipents(props.shift, "מזרחי", allUsers);
-    const gate = getShiftParticipents(props.shift, "ש״ג", allUsers);
-    const school = getShiftParticipents(props.shift, "בית ספר", allUsers);
-    const drone = getShiftParticipents(props.shift, "רחפן", allUsers);
-
-    return (
-      <>
-        {patrol && patrol.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              סיור
-            </Text>
-            <div className={`${styles.tagsWrapper}`}>
-              <Tag type="lite">{patrol[0]}</Tag>
-              <Tag type="lite">{patrol[1]}</Tag>
-            </div>
-          </div>
-        )}
-        {east && east.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              מזרחי
-            </Text>
-            <div className={`${styles.tagsWrapper}`}>
-              <Tag type="lite">{east[0]}</Tag>
-              <Tag type="lite">{east[1]}</Tag>
-            </div>
-          </div>
-        )}
-        {flowers && flowers.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              פרחים
-            </Text>
-            <div className={`${styles.tagsWrapper}`}>
-              <Tag type="lite">{flowers[0]}</Tag>
-              {flowers[1] && <Tag type="lite">{flowers[1]}</Tag>}
-            </div>
-          </div>
-        )}
-        {gate && gate.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              ש״ג
-            </Text>
-            <div className={`${styles.tagsWrapper}`}>
-              <Tag type="lite">{gate[0]}</Tag>
-              {gate[1] && <Tag type="lite">{gate[1]}</Tag>}
-            </div>
-          </div>
-        )}
-        {school && school.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              בית ספר
-            </Text>
-            <Tag type="lite">{school[0]}</Tag>
-          </div>
-        )}
-        {drone && drone.length > 0 && (
-          <div className={`${styles.shiftEntry}`}>
-            <Text p b>
-              רחפן
-            </Text>
-            <Tag type="lite">{drone[0]}</Tag>
-          </div>
-        )}
-      </>
     );
   };
 
