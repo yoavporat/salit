@@ -45,7 +45,9 @@ export class Notion {
           {
             property: "זמן",
             date: {
-              after: new Date().toISOString(),
+              on_or_after: new Date(
+                new Date().getTime() - 4 * 60 * 60 * 1000
+              ).toISOString(),
             },
           },
           {
