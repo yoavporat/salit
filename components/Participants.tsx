@@ -36,7 +36,7 @@ export const Participents = ({ shift, allUsers }: IProps) => {
           </Text>
           <div className={`${styles.tagsWrapper}`}>
             <Tag type="lite">{east[0]}</Tag>
-            <Tag type="lite">{east[1]}</Tag>
+            {east[1] && <Tag type="lite">{east[1]}</Tag>}
           </div>
         </div>
       )}
