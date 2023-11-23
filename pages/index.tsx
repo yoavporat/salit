@@ -47,8 +47,9 @@ export default function Home(props: { users: Array<any> }) {
     const uid = localStorage.getItem("salit-uid");
     if (uid) {
       setUserId(uid);
+      console.log(allUsers);
     }
-  }, []);
+  }, [allUsers]);
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
     if (props.shifts.length === 0) {
@@ -243,6 +244,7 @@ const NoShifts = () => {
 
 export const getServerSideProps = async () => {
   const allUsers = await new Notion().getAllUsers();
+  const squadUsers = allUsers.filter((user) => user.type);
   return {
     props: {
       users: allUsers,
