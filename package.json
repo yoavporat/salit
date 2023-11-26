@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^9.7.2",
     "@geist-ui/core": "^2.3.8",
     "@notionhq/client": "^2.2.13",
     "next": "14.0.1",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.0.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack": "^5.89.0"
   }
 }
