@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
+  getSquadMembers,
   identifyShift,
   toDate,
   toRelativeTime,
@@ -38,12 +39,13 @@ export default function Home(props: { users: Array<any> }) {
       setShifts([]);
       setUser(null);
     }
-  }, [userId, allUsers]);
+  }, [userId]);
 
   useEffect(() => {
     const uid = localStorage.getItem("salit-uid");
     if (uid) {
       setUserId(uid);
+      setUser(allUsers.find((user) => user.id === userId));
     }
   }, [allUsers]);
 
@@ -59,7 +61,9 @@ export default function Home(props: { users: Array<any> }) {
       .then((data) => {
         const updatedUser = allUsers.find((user) => user.id === userId);
         updatedUser.status = data.status;
-        setUser(updatedUser);
+        fetch("/api/users")
+          .then((res) => res.json())
+          .then((data) => setAllUsers(data.users));
       });
   };
 
@@ -131,7 +135,11 @@ export default function Home(props: { users: Array<any> }) {
           <Loader />
         ) : (
           <>
-            <AvailabilityCard user={user} onToggle={onAvailabilityToggle} />
+            <AvailabilityCard
+              user={user}
+              onToggle={onAvailabilityToggle}
+              squadData={getSquadMembers(allUsers)}
+            />
             <Shifts shifts={shifts} />
           </>
         )}
@@ -160,7 +168,6 @@ const NoShifts = () => {
 
 export const getServerSideProps = async () => {
   const allUsers = await new Notion().getAllUsers();
-  const squadUsers = allUsers.filter((user) => user.type);
   return {
     props: {
       users: allUsers,
