@@ -1,0 +1,15 @@
+.shiftEntry {
+  display: flex;
+  margin: 8px 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shiftEntry p {
+  margin: 0;
+}
+
+.tagsWrapper {
+  display: flex;
+  gap: 8px;
+}
