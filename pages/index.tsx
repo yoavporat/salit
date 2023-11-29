@@ -5,6 +5,7 @@ import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
+  TUser,
   identifyShift,
   toDate,
   toRelativeTime,
@@ -13,9 +14,11 @@ import {
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
+import { AvailabilityCard } from "@/components/AvailabilityCard";
 
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
+  const [user, setUser] = useState<TUser | null>();
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
@@ -28,19 +31,37 @@ export default function Home(props: { users: Array<any> }) {
         .then((data) => {
           localStorage.setItem("salit-uid", userId);
           setShifts(data.shifts);
+          setUser(allUsers.find((user) => user.id === userId));
           setLoading(false);
         });
     } else {
       setShifts([]);
+      setUser(null);
     }
-  }, [userId]);
+  }, [userId, allUsers]);
 
   useEffect(() => {
     const uid = localStorage.getItem("salit-uid");
     if (uid) {
       setUserId(uid);
     }
-  }, []);
+  }, [allUsers]);
+
+  const onAvailabilityToggle = (ev: any) => {
+    setUser(null);
+    fetch(`/api/availability?uid=${userId}`, {
+      method: "POST",
+      body: JSON.stringify({
+        available: ev.target.checked,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const updatedUser = allUsers.find((user) => user.id === userId);
+        updatedUser.status = data.status;
+        setUser(updatedUser);
+      });
+  };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
     if (props.shifts.length === 0) {
@@ -106,7 +127,14 @@ export default function Home(props: { users: Array<any> }) {
             </Select.Option>
           ))}
         </Select>
-        {loading ? <Loader /> : <Shifts shifts={shifts} />}
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            <AvailabilityCard user={user} onToggle={onAvailabilityToggle} />
+            <Shifts shifts={shifts} />
+          </>
+        )}
       </main>
     </>
   );
@@ -132,6 +160,7 @@ const NoShifts = () => {
 
 export const getServerSideProps = async () => {
   const allUsers = await new Notion().getAllUsers();
+  const squadUsers = allUsers.filter((user) => user.type);
   return {
     props: {
       users: allUsers,

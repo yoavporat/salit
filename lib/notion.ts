@@ -1,5 +1,4 @@
 import { Client, isFullPage } from "@notionhq/client";
-import { TitlePropertyItemObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { TUser } from "./utils";
 
 const ShiftsDB = "2564fd1207ab415386bac64fbb17a46c";
@@ -32,6 +31,13 @@ export class Notion {
         return {
           username: user.properties.Name.title[0].plain_text,
           id: user.id,
+          status:
+            user.properties["סטטוס"].type === "status" &&
+            user.properties["סטטוס"].status?.name,
+          type:
+            user.properties["שיוך"].type === "multi_select" &&
+            user.properties["שיוך"].multi_select.length > 0 &&
+            user.properties["שיוך"].multi_select[0].name,
         };
       }
     }) as TUser[];
@@ -100,5 +106,25 @@ export class Notion {
       ],
     });
     return response.results;
+  }
+
+  async setUserStatus(userId: string, status: string) {
+    const resposnse = await this.client.pages.update({
+      page_id: userId,
+      properties: {
+        סטטוס: {
+          type: "status",
+          status: {
+            name: status,
+          },
+        },
+      },
+    });
+    return (
+      resposnse.object === "page" &&
+      isFullPage(resposnse) &&
+      resposnse.properties["סטטוס"].type === "status" &&
+      resposnse.properties["סטטוס"].status?.name
+    );
   }
 }

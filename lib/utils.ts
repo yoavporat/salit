@@ -10,6 +10,8 @@ export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
   username: string;
   id: string;
+  status: string;
+  type: string;
 };
 
 export function toDate(date: string) {
