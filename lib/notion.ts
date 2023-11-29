@@ -36,6 +36,7 @@ export class Notion {
             user.properties["סטטוס"].status?.name,
           type:
             user.properties["שיוך"].type === "multi_select" &&
+            user.properties["שיוך"].multi_select.length > 0 &&
             user.properties["שיוך"].multi_select[0].name,
         };
       }
@@ -105,5 +106,25 @@ export class Notion {
       ],
     });
     return response.results;
+  }
+
+  async setUserStatus(userId: string, status: string) {
+    const resposnse = await this.client.pages.update({
+      page_id: userId,
+      properties: {
+        סטטוס: {
+          type: "status",
+          status: {
+            name: status,
+          },
+        },
+      },
+    });
+    return (
+      resposnse.object === "page" &&
+      isFullPage(resposnse) &&
+      resposnse.properties["סטטוס"].type === "status" &&
+      resposnse.properties["סטטוס"].status?.name
+    );
   }
 }
