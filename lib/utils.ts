@@ -90,3 +90,7 @@ export function getShiftParticipents(
     ) as Array<string>)
   );
 }
+
+export function getSquadMembers(users: TUser[]) {
+  return users.filter((user) => user.type === "כיתת כוננות");
+}
