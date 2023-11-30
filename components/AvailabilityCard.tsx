@@ -38,12 +38,16 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
 
 const AvailabilityStatus = ({ data }: { data: TUser[] }) => {
   const available = data.filter((user) => user.status === "זמין");
+  const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   const theme = useTheme();
 
   return (
     <GaugeComponent
       value={Math.round((available.length / 23) * 100)}
       type="semicircle"
+      style={{
+        width: windowWidth <= 375 ? "90%" : "100%",
+      }}
       arc={{
         nbSubArcs: 2,
         subArcs: [
