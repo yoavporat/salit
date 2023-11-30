@@ -9,7 +9,6 @@ import {
   getSquadMembers,
   identifyShift,
   toDate,
-  toRelativeTime,
   toTime,
 } from "@/lib/utils";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
