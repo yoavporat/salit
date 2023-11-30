@@ -98,7 +98,7 @@ export default function Home(props: { users: Array<any> }) {
       time &&
       `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
         time.start
-      )} (${toRelativeTime(time.start)})`;
+      )}`;
     const title = `${props.type.emoji} ${props.type.name}`;
 
     return (
