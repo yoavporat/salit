@@ -1,13 +1,10 @@
 import { TUser } from "@/lib/utils";
-import {
-  Card,
-  Grid,
-  Text,
-  Toggle,
-  Spinner,
-  Capacity,
-  useTheme,
-} from "@geist-ui/core";
+import { Card, Grid, Text, Toggle, Spinner, useTheme } from "@geist-ui/core";
+import dynamic from "next/dynamic";
+
+const GaugeComponent = dynamic(() => import("react-gauge-component"), {
+  ssr: false,
+});
 
 interface IProps {
   user?: TUser | null;
@@ -41,27 +38,35 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
 
 const AvailabilityStatus = ({ data }: { data: TUser[] }) => {
   const available = data.filter((user) => user.status === "זמין");
-  const threshold = 12;
   const theme = useTheme();
 
   return (
     <Grid.Container justify="space-between" alignItems="center">
       <Grid>
-        <Text b> במושב כרגע</Text>
-      </Grid>
-      <Grid>
-        <Text p>{`(23 / ${available.length})`}</Text>
-      </Grid>
-      <Grid>
-        <Capacity
-          value={available.length}
-          limit={23}
-          scale={3}
-          color={
-            available.length < threshold
-              ? theme.palette.errorLight
-              : theme.palette.cyan
-          }
+        <GaugeComponent
+          value={Math.round((available.length / 23) * 100)}
+          type="semicircle"
+          arc={{
+            nbSubArcs: 2,
+            subArcs: [
+              { limit: 50, color: theme.palette.alert },
+              { limit: 100, color: theme.palette.success },
+            ],
+          }}
+          labels={{
+            tickLabels: {
+              type: "inner",
+            },
+            valueLabel: {
+              style: {
+                textShadow: "unset",
+                fill: "unset",
+              },
+            },
+          }}
+          pointer={{
+            type: "blob",
+          }}
         />
       </Grid>
     </Grid.Container>
