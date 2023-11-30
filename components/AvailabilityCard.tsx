@@ -41,34 +41,30 @@ const AvailabilityStatus = ({ data }: { data: TUser[] }) => {
   const theme = useTheme();
 
   return (
-    <Grid.Container justify="space-between" alignItems="center">
-      <Grid>
-        <GaugeComponent
-          value={Math.round((available.length / 23) * 100)}
-          type="semicircle"
-          arc={{
-            nbSubArcs: 2,
-            subArcs: [
-              { limit: 50, color: theme.palette.alert },
-              { limit: 100, color: theme.palette.success },
-            ],
-          }}
-          labels={{
-            tickLabels: {
-              type: "inner",
-            },
-            valueLabel: {
-              style: {
-                textShadow: "unset",
-                fill: "unset",
-              },
-            },
-          }}
-          pointer={{
-            type: "blob",
-          }}
-        />
-      </Grid>
-    </Grid.Container>
+    <GaugeComponent
+      value={Math.round((available.length / 23) * 100)}
+      type="semicircle"
+      arc={{
+        nbSubArcs: 2,
+        subArcs: [
+          { limit: 50, color: theme.palette.alert },
+          { limit: 100, color: theme.palette.success },
+        ],
+      }}
+      labels={{
+        tickLabels: {
+          type: "inner",
+        },
+        valueLabel: {
+          style: {
+            textShadow: "unset",
+            fill: "unset",
+          },
+        },
+      }}
+      pointer={{
+        type: "blob",
+      }}
+    />
   );
 };
