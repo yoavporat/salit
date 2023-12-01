@@ -54,10 +54,13 @@ const AvailabilityStatus = ({ data }: { data: TUser[] }) => {
           { limit: 50, color: theme.palette.alert },
           { limit: 100, color: theme.palette.success },
         ],
+        padding: 0.02,
+        width: 0.12,
       }}
       labels={{
         tickLabels: {
           type: "inner",
+          hideMinMax: true,
         },
         valueLabel: {
           style: {
