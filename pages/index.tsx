@@ -111,8 +111,6 @@ export default function Home(props: { users: Array<any> }) {
     <>
       <Head>
         <title>סלעית | רשימת שמירה</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main}`}>
         <Text h2>רשימת שמירה</Text>
