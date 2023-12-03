@@ -52,6 +52,8 @@ export default function Home(props: { users: Array<any> }) {
     if (uid) {
       setUserId(uid);
       setUser(allUsers.find((user) => user.id === userId));
+    } else {
+      onClear();
     }
   }, [allUsers]);
 

@@ -15,10 +15,12 @@ interface IProps {
 export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
   return (
     <Card width="80%">
-      <Grid.Container direction="column" justify="center" alignItems="center">
+      <Grid.Container direction="column">
         <Grid>
           {user === undefined ? (
-            <Text b>זמינות כיתת הכוננות</Text>
+            <Text b style={{ textAlign: "center" }}>
+              זמינות כיתת הכוננות
+            </Text>
           ) : (
             <Grid.Container gap={2} justify="space-between" alignItems="center">
               <Grid>
