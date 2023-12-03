@@ -18,8 +18,8 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
       <Grid.Container direction="column">
         <Grid>
           {user === undefined ? (
-            <Text b style={{ textAlign: "center" }}>
-              זמינות כיתת הכוננות
+            <Text h3 style={{ textAlign: "center" }}>
+              זמינות
             </Text>
           ) : (
             <Grid.Container gap={2} justify="space-between" alignItems="center">

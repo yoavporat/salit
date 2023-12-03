@@ -33,7 +33,6 @@ export default function Home(props: { users: Array<any> }) {
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
   useEffect(() => {
-    console.log("effect1");
     if (userId) {
       setLoading(true);
       fetch(`/api/shifts?uid=${userId}`)
