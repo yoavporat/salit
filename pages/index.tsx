@@ -1,7 +1,15 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
-import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
+import {
+  Button,
+  Collapse,
+  Grid,
+  Select,
+  Spacer,
+  Spinner,
+  Text,
+} from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
@@ -15,6 +23,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
+import { Trash2 } from "@geist-ui/icons";
 
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
@@ -35,7 +44,13 @@ export default function Home(props: { users: Array<any> }) {
           setLoading(false);
         });
     } else {
-      setShifts([]);
+      setLoading(true);
+      fetch(`/api/shifts`)
+        .then((res) => res.json())
+        .then((data) => {
+          setShifts(data.shifts);
+          setLoading(false);
+        });
       setUser(null);
     }
   }, [userId]);
@@ -64,6 +79,11 @@ export default function Home(props: { users: Array<any> }) {
           .then((res) => res.json())
           .then((data) => setAllUsers(data.users));
       });
+  };
+
+  const onClear = () => {
+    setUserId("");
+    setUser(null);
   };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
@@ -114,20 +134,32 @@ export default function Home(props: { users: Array<any> }) {
       </Head>
       <main className={`${styles.main}`}>
         <Text h2>רשימת שמירה</Text>
-        <Select
-          placeholder="שם"
-          onChange={(e) => setUserId(e as string)}
-          width="75%"
-          height="50px"
-          value={userId}
-          clearable
-        >
-          {props.users.map((user) => (
-            <Select.Option key={user.id} value={user.id} font={2}>
-              {user.username}
-            </Select.Option>
-          ))}
-        </Select>
+        <Grid.Container gap={1} justify="center">
+          <Grid xs={16}>
+            <Select
+              placeholder="שם"
+              onChange={(e) => setUserId(e as string)}
+              height="50px"
+              width="100%"
+              value={userId}
+            >
+              {props.users.map((user) => (
+                <Select.Option key={user.id} value={user.id} font={2}>
+                  {user.username}
+                </Select.Option>
+              ))}
+            </Select>
+          </Grid>
+          <Grid xs={4}>
+            <Button
+              iconRight={<Trash2 />}
+              height="50px"
+              width="100%"
+              padding={0}
+              onClick={onClear}
+            />
+          </Grid>
+        </Grid.Container>
         {loading ? (
           <Loader />
         ) : (

@@ -21,6 +21,9 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const userId = req.query.uid as string;
-  const shifts = await new Notion().getUserShifts(userId);
-  res.status(200).json({ shifts });
+  if (userId) {
+    res.status(200).json({ shifts: await new Notion().getUserShifts(userId) });
+  } else {
+    res.status(200).json({ shifts: await new Notion().getAllFutureShifts() });
+  }
 }
