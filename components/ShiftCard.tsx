@@ -35,7 +35,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
       </Card.Content>
       <Divider h="1px" my={0} />
       <Card.Content>
-        <Text h3>{type.name}</Text>
+        {type.name && <Text h3>{type.name}</Text>}
         <Text h5>{timeString}</Text>
         <Participents shift={shift} allUsers={allUsers} />
       </Card.Content>

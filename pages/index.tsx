@@ -1,7 +1,15 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
-import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
+import {
+  Button,
+  Collapse,
+  Grid,
+  Select,
+  Spacer,
+  Spinner,
+  Text,
+} from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
   TShift,
@@ -15,6 +23,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
+import { Eye } from "@geist-ui/icons";
 
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
@@ -34,9 +43,6 @@ export default function Home(props: { users: Array<any> }) {
           setUser(allUsers.find((user) => user.id === userId));
           setLoading(false);
         });
-    } else {
-      setShifts([]);
-      setUser(null);
     }
   }, [userId]);
 
@@ -45,6 +51,8 @@ export default function Home(props: { users: Array<any> }) {
     if (uid) {
       setUserId(uid);
       setUser(allUsers.find((user) => user.id === userId));
+    } else {
+      onClear();
     }
   }, [allUsers]);
 
@@ -64,6 +72,18 @@ export default function Home(props: { users: Array<any> }) {
           .then((res) => res.json())
           .then((data) => setAllUsers(data.users));
       });
+  };
+
+  const onClear = () => {
+    setUserId("");
+    setLoading(true);
+    fetch(`/api/shifts`)
+      .then((res) => res.json())
+      .then((data) => {
+        setShifts(data.shifts);
+        setLoading(false);
+      });
+    setUser(undefined);
   };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
@@ -93,15 +113,24 @@ export default function Home(props: { users: Array<any> }) {
     const time =
       props.shift.properties["זמן"].type == "date" &&
       props.shift.properties["זמן"].date;
-    const subtitle =
-      time &&
-      `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
-        time.start
-      )}`;
-    const title = `${props.type.emoji} ${props.type.name}`;
+
+    if (!time) {
+      return null;
+    }
+
+    const subtitle = `${toDate(time.start)} @ ${toTime(
+      time.end as string
+    )} - ${toTime(time.start)}`;
+    const title =
+      props.type.type === "unknown"
+        ? subtitle
+        : `${props.type.emoji} ${props.type.name}`;
 
     return (
-      <Collapse title={title} subtitle={subtitle}>
+      <Collapse
+        title={title}
+        subtitle={props.type.type !== "unknown" && subtitle}
+      >
         <Participents shift={props.shift} allUsers={allUsers} />
       </Collapse>
     );
@@ -111,23 +140,37 @@ export default function Home(props: { users: Array<any> }) {
     <>
       <Head>
         <title>סלעית | רשימת שמירה</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`${styles.main}`}>
         <Text h2>רשימת שמירה</Text>
-        <Select
-          placeholder="שם"
-          onChange={(e) => setUserId(e as string)}
-          width="75%"
-          height="50px"
-          value={userId}
-          clearable
-        >
-          {props.users.map((user) => (
-            <Select.Option key={user.id} value={user.id} font={2}>
-              {user.username}
-            </Select.Option>
-          ))}
-        </Select>
+        <Grid.Container gap={1} justify="center">
+          <Grid xs={16}>
+            <Select
+              placeholder="שם"
+              onChange={(e) => setUserId(e as string)}
+              height="50px"
+              width="100%"
+              value={userId}
+            >
+              {props.users.map((user) => (
+                <Select.Option key={user.id} value={user.id} font={2}>
+                  {user.username}
+                </Select.Option>
+              ))}
+            </Select>
+          </Grid>
+          <Grid xs={4}>
+            <Button
+              iconRight={<Eye />}
+              height="50px"
+              width="100%"
+              padding={0}
+              onClick={onClear}
+              disabled={!userId}
+            />
+          </Grid>
+        </Grid.Container>
         {loading ? (
           <Loader />
         ) : (
