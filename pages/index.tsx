@@ -23,7 +23,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
-import { Trash2 } from "@geist-ui/icons";
+import { Eye } from "@geist-ui/icons";
 
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
@@ -33,6 +33,7 @@ export default function Home(props: { users: Array<any> }) {
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
   useEffect(() => {
+    console.log("effect1");
     if (userId) {
       setLoading(true);
       fetch(`/api/shifts?uid=${userId}`)
@@ -43,15 +44,6 @@ export default function Home(props: { users: Array<any> }) {
           setUser(allUsers.find((user) => user.id === userId));
           setLoading(false);
         });
-    } else {
-      setLoading(true);
-      fetch(`/api/shifts`)
-        .then((res) => res.json())
-        .then((data) => {
-          setShifts(data.shifts);
-          setLoading(false);
-        });
-      setUser(null);
     }
   }, [userId]);
 
@@ -83,7 +75,14 @@ export default function Home(props: { users: Array<any> }) {
 
   const onClear = () => {
     setUserId("");
-    setUser(null);
+    setLoading(true);
+    fetch(`/api/shifts`)
+      .then((res) => res.json())
+      .then((data) => {
+        setShifts(data.shifts);
+        setLoading(false);
+      });
+    setUser(undefined);
   };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
@@ -113,15 +112,24 @@ export default function Home(props: { users: Array<any> }) {
     const time =
       props.shift.properties["זמן"].type == "date" &&
       props.shift.properties["זמן"].date;
-    const subtitle =
-      time &&
-      `${toDate(time.start)} @ ${toTime(time.end as string)} - ${toTime(
-        time.start
-      )}`;
-    const title = `${props.type.emoji} ${props.type.name}`;
+
+    if (!time) {
+      return null;
+    }
+
+    const subtitle = `${toDate(time.start)} @ ${toTime(
+      time.end as string
+    )} - ${toTime(time.start)}`;
+    const title =
+      props.type.type === "unknown"
+        ? subtitle
+        : `${props.type.emoji} ${props.type.name}`;
 
     return (
-      <Collapse title={title} subtitle={subtitle}>
+      <Collapse
+        title={title}
+        subtitle={props.type.type !== "unknown" && subtitle}
+      >
         <Participents shift={props.shift} allUsers={allUsers} />
       </Collapse>
     );
@@ -153,11 +161,12 @@ export default function Home(props: { users: Array<any> }) {
           </Grid>
           <Grid xs={4}>
             <Button
-              iconRight={<Trash2 />}
+              iconRight={<Eye />}
               height="50px"
               width="100%"
               padding={0}
               onClick={onClear}
+              disabled={!userId}
             />
           </Grid>
         </Grid.Container>

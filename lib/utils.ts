@@ -1,7 +1,7 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "school";
+  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "school" | "unknown";
   name: string;
   emoji: string;
 };
@@ -74,7 +74,13 @@ export function identifyShift(
   ) {
     return { type: "school", name: "בית ספר", emoji: "🎓" };
   }
-  return { type: "gate", name: "ש״ג", emoji: "🚧" };
+  if (
+    shift.properties["ש״ג"].type == "relation" &&
+    shift.properties["ש״ג"].relation.some((user) => user.id === userId)
+  ) {
+    return { type: "gate", name: "ש״ג", emoji: "🚧" };
+  }
+  return { type: "unknown", name: "", emoji: "" };
 }
 
 export function getShiftParticipents(
