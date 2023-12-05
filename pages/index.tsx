@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useSession, signIn } from "next-auth/react";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
 import { Collapse, Select, Spacer, Spinner, Text } from "@geist-ui/core";
@@ -22,6 +23,8 @@ export default function Home(props: { users: Array<any> }) {
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (userId) {
@@ -107,42 +110,51 @@ export default function Home(props: { users: Array<any> }) {
     );
   };
 
-  return (
-    <>
-      <Head>
-        <title>סלעית | רשימת שמירה</title>
-      </Head>
-      <main className={`${styles.main}`}>
-        <Text h2>רשימת שמירה</Text>
-        <Select
-          placeholder="שם"
-          onChange={(e) => setUserId(e as string)}
-          width="75%"
-          height="50px"
-          value={userId}
-          clearable
-        >
-          {props.users.map((user) => (
-            <Select.Option key={user.id} value={user.id} font={2}>
-              {user.username}
-            </Select.Option>
-          ))}
-        </Select>
-        {loading ? (
-          <Loader />
-        ) : (
-          <>
-            <AvailabilityCard
-              user={user}
-              onToggle={onAvailabilityToggle}
-              squadData={getSquadMembers(allUsers)}
-            />
-            <Shifts shifts={shifts} />
-          </>
-        )}
-      </main>
-    </>
-  );
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>סלעית | רשימת שמירה</title>
+        </Head>
+        <main className={`${styles.main}`}>
+          <Text h2>רשימת שמירה</Text>
+          <Select
+            placeholder="שם"
+            onChange={(e) => setUserId(e as string)}
+            width="75%"
+            height="50px"
+            value={userId}
+            clearable
+          >
+            {props.users.map((user) => (
+              <Select.Option key={user.id} value={user.id} font={2}>
+                {user.username}
+              </Select.Option>
+            ))}
+          </Select>
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <AvailabilityCard
+                user={user}
+                onToggle={onAvailabilityToggle}
+                squadData={getSquadMembers(allUsers)}
+              />
+              <Shifts shifts={shifts} />
+            </>
+          )}
+        </main>
+      </>
+    );
+  } else {
+    return (
+      <>
+        Not signed in <br />
+        <button onClick={() => signIn()}>Sign in</button>
+      </>
+    );
+  }
 }
 
 const Loader = () => {
