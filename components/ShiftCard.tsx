@@ -26,7 +26,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
   const title = isLive ? "המשמרת הנוכחית" : "המשמרת הבאה";
 
   return (
-    <Card width="80%" type={isLive ? "violet" : "success"}>
+    <Card type={isLive ? "violet" : "success"} width="100%">
       <Card.Content className={`${styles.cardHeader}`}>
         <Text b my={0}>
           {title}
