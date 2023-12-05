@@ -94,12 +94,12 @@ export default function Home(props: { users: Array<any> }) {
       return <NoShifts />;
     }
     return (
-      <Grid.Container direction="column" alignItems="stretch" width="100%">
-        <Grid xs={24} padding="48px">
+      <Grid.Container direction="column" alignItems="stretch" width="90%">
+        <Grid xs={24} padding="40px">
           <ShiftCard shift={shifts[0]} userId={userId} allUsers={allUsers} />
         </Grid>
         <Grid>
-          <Collapse.Group width="100%">
+          <Collapse.Group>
             {props.shifts &&
               props.shifts
                 .slice(1)
