@@ -108,6 +108,27 @@ export class Notion {
     return response.results;
   }
 
+  async getAllFutureShifts() {
+    const response = await this.client.databases.query({
+      database_id: ShiftsDB,
+      filter: {
+        property: "זמן",
+        date: {
+          on_or_after: new Date(
+            new Date().getTime() - 4 * 60 * 60 * 1000
+          ).toISOString(),
+        },
+      },
+      sorts: [
+        {
+          property: "זמן",
+          direction: "ascending",
+        },
+      ],
+    });
+    return response.results;
+  }
+
   async setUserStatus(userId: string, status: string) {
     const resposnse = await this.client.pages.update({
       page_id: userId,

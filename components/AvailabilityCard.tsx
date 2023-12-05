@@ -17,26 +17,32 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
     <Card width="80%">
       <Grid.Container direction="column">
         <Grid>
-          <Grid.Container gap={2} justify="space-between" alignItems="center">
-            <Grid>
-              {user === null ? <Spinner /> : <Text b>{user?.status}</Text>}
-            </Grid>
-            <Grid direction="row-reverse">
-              <Toggle
-                checked={user?.status === "זמין"}
-                scale={2}
-                onChange={onToggle}
-              />
-            </Grid>
-          </Grid.Container>
+          {user === undefined ? (
+            <Text h3 style={{ textAlign: "center" }}>
+              זמינות
+            </Text>
+          ) : (
+            <Grid.Container gap={2} justify="space-between" alignItems="center">
+              <Grid>
+                {user === null ? <Spinner /> : <Text b>{user?.status}</Text>}
+              </Grid>
+              <Grid direction="row-reverse">
+                <Toggle
+                  checked={user?.status === "זמין"}
+                  scale={2}
+                  onChange={onToggle}
+                />
+              </Grid>
+            </Grid.Container>
+          )}
         </Grid>
-        <Grid>{squadData && <AvailabilityStatus data={squadData} />}</Grid>
+        <Grid>{squadData && <AvailabilityGuage data={squadData} />}</Grid>
       </Grid.Container>
     </Card>
   );
 };
 
-const AvailabilityStatus = ({ data }: { data: TUser[] }) => {
+const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
   const available = data.filter((user) => user.status === "זמין");
   const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   const theme = useTheme();
