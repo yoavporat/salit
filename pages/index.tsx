@@ -94,8 +94,12 @@ export default function Home(props: { users: Array<any> }) {
       return <NoShifts />;
     }
     return (
-      <Grid.Container direction="column" alignItems="stretch" width="90%">
-        <Grid xs={24} padding="40px">
+      <Grid.Container
+        direction="column"
+        justify="center"
+        style={{ padding: "24px" }}
+      >
+        <Grid style={{ padding: "0 24px 24px 24px" }}>
           <ShiftCard shift={shifts[0]} userId={userId} allUsers={allUsers} />
         </Grid>
         <Grid>
@@ -153,12 +157,16 @@ export default function Home(props: { users: Array<any> }) {
         <Text h2>רשימת שמירה</Text>
         {session ? (
           <Grid.Container
-            gap={1}
+            gap={2}
             justify="center"
             direction="column"
             alignItems="center"
           >
-            <Grid.Container gap={1} justify="center">
+            <Grid.Container
+              gap={1}
+              justify="center"
+              style={{ padding: "0 16px" }}
+            >
               <Grid xs={16}>
                 <Select
                   placeholder="שם"
@@ -191,7 +199,7 @@ export default function Home(props: { users: Array<any> }) {
               </Grid>
             ) : (
               <>
-                <Grid xs={24}>
+                <Grid>
                   <AvailabilityCard
                     user={user}
                     onToggle={onAvailabilityToggle}

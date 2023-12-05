@@ -14,7 +14,7 @@ interface IProps {
 
 export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
   return (
-    <Card width="80%">
+    <Card>
       <Grid.Container direction="column">
         <Grid>
           {user === undefined ? (
