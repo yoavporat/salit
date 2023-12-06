@@ -6,6 +6,15 @@ export type TShift = {
   emoji: string;
 };
 
+export enum Positions {
+  PATROL = "סיור",
+  EAST = "מזרחי",
+  FLOWERS = "פרחים",
+  GATE = "ש״ג",
+  DRONE = "רחפן",
+  SCHOOL = "בית ספר",
+}
+
 export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
   username: string;
@@ -89,12 +98,13 @@ export function getShiftParticipents(
   allUsers: TUser[]
 ) {
   const relation = shift.properties[type];
-  return (
-    relation.type === "relation" &&
-    (relation.relation.map(
+  if (relation.type === "relation") {
+    return relation.relation.map(
       (p) => allUsers.find((u) => u.id === p.id)?.username
-    ) as Array<string>)
-  );
+    ) as Array<string>;
+  } else {
+    return [];
+  }
 }
 
 export function getSquadMembers(users: TUser[]) {
