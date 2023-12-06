@@ -23,10 +23,10 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
             </Text>
           ) : (
             <Grid.Container gap={2} justify="space-between" alignItems="center">
-              <Grid>
+              <Grid xs={16}>
                 {user === null ? <Spinner /> : <Text b>{user?.status}</Text>}
               </Grid>
-              <Grid direction="row-reverse">
+              <Grid direction="row-reverse" xs={8}>
                 <Toggle
                   checked={user?.status === "זמין"}
                   scale={2}
@@ -36,7 +36,9 @@ export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
             </Grid.Container>
           )}
         </Grid>
-        <Grid>{squadData && <AvailabilityGuage data={squadData} />}</Grid>
+        <Grid style={{ alignSelf: "center" }}>
+          {squadData && <AvailabilityGuage data={squadData} />}
+        </Grid>
       </Grid.Container>
     </Card>
   );

@@ -26,6 +26,8 @@ import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
 import { Eye } from "@geist-ui/icons";
 
+const PADDING = "0 12px";
+
 export default function Home(props: { users: Array<any> }) {
   const [userId, setUserId] = useState<string>("");
   const [user, setUser] = useState<TUser | null>();
@@ -94,29 +96,18 @@ export default function Home(props: { users: Array<any> }) {
       return <NoShifts />;
     }
     return (
-      <Grid.Container
-        direction="column"
-        justify="center"
-        style={{ padding: "24px" }}
-      >
-        <Grid style={{ padding: "0 24px 24px 24px" }}>
-          <ShiftCard shift={shifts[0]} userId={userId} allUsers={allUsers} />
-        </Grid>
-        <Grid>
-          <Collapse.Group>
-            {props.shifts &&
-              props.shifts
-                .slice(1)
-                .map((shift) => (
-                  <Shift
-                    key={shift.id}
-                    shift={shift}
-                    type={identifyShift(shift, userId)}
-                  />
-                ))}
-          </Collapse.Group>
-        </Grid>
-      </Grid.Container>
+      <Collapse.Group>
+        {props.shifts &&
+          props.shifts
+            .slice(1)
+            .map((shift) => (
+              <Shift
+                key={shift.id}
+                shift={shift}
+                type={identifyShift(shift, userId)}
+              />
+            ))}
+      </Collapse.Group>
     );
   };
 
@@ -147,6 +138,42 @@ export default function Home(props: { users: Array<any> }) {
     );
   };
 
+  const SearchRow = () => {
+    return (
+      <Grid.Container gap={1} justify="center" style={{ padding: PADDING }}>
+        <Grid xs={20}>
+          <Select
+            placeholder="שם"
+            onChange={(e) => setUserId(e as string)}
+            height="50px"
+            width="100%"
+            value={userId}
+          >
+            {props.users.map((user) => (
+              <Select.Option key={user.id} value={user.id} font={2}>
+                {user.username}
+              </Select.Option>
+            ))}
+          </Select>
+        </Grid>
+        <Grid xs={4}>
+          <Button
+            iconRight={<Eye />}
+            height="50px"
+            width="50px"
+            padding={0}
+            onClick={onClear}
+            disabled={!userId}
+          />
+        </Grid>
+      </Grid.Container>
+    );
+  };
+
+  if (!session) {
+    return <Unauthorized />;
+  }
+
   return (
     <>
       <Head>
@@ -154,65 +181,42 @@ export default function Home(props: { users: Array<any> }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`${styles.main}`}>
-        <Text h2>רשימת שמירה</Text>
-        {session ? (
-          <Grid.Container
-            gap={2}
-            justify="center"
-            direction="column"
-            alignItems="center"
-          >
-            <Grid.Container
-              gap={1}
-              justify="center"
-              style={{ padding: "0 16px" }}
-            >
-              <Grid xs={16}>
-                <Select
-                  placeholder="שם"
-                  onChange={(e) => setUserId(e as string)}
-                  height="50px"
-                  width="100%"
-                  value={userId}
-                >
-                  {props.users.map((user) => (
-                    <Select.Option key={user.id} value={user.id} font={2}>
-                      {user.username}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid xs={4}>
-                <Button
-                  iconRight={<Eye />}
-                  height="50px"
-                  width="100%"
-                  padding={0}
-                  onClick={onClear}
-                  disabled={!userId}
+        <Grid.Container
+          justify="center"
+          direction="column"
+          alignItems="center"
+          style={{ padding: PADDING, gap: "20px" }}
+        >
+          <Grid>
+            <Text h1>רשימת שמירה</Text>
+          </Grid>
+          <SearchRow />
+          {loading ? (
+            <Grid>
+              <Loader />
+            </Grid>
+          ) : (
+            <>
+              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                <AvailabilityCard
+                  user={user}
+                  onToggle={onAvailabilityToggle}
+                  squadData={getSquadMembers(allUsers)}
                 />
               </Grid>
-            </Grid.Container>
-            {loading ? (
-              <Grid>
-                <Loader />
+              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                <ShiftCard
+                  shift={shifts[0]}
+                  userId={userId}
+                  allUsers={allUsers}
+                />
               </Grid>
-            ) : (
-              <>
-                <Grid>
-                  <AvailabilityCard
-                    user={user}
-                    onToggle={onAvailabilityToggle}
-                    squadData={getSquadMembers(allUsers)}
-                  />
-                </Grid>
+              <Grid className={`${styles.grid}`}>
                 <Shifts shifts={shifts} />
-              </>
-            )}
-          </Grid.Container>
-        ) : (
-          <Unauthorized />
-        )}
+              </Grid>
+            </>
+          )}
+        </Grid.Container>
       </main>
     </>
   );
@@ -239,27 +243,37 @@ const NoShifts = () => {
 const Unauthorized = () => {
   return (
     <Grid.Container
-      gap={1}
+      gap={2}
       justify="center"
-      alignContent="center"
+      alignItems="center"
       direction="column"
+      height="100vh"
     >
       <Grid>
-        <Text h1 style={{ textAlign: "center" }}>
+        <Text h1 className={`${styles.textCenter}`}>
+          רשימת שמירה
+        </Text>
+      </Grid>
+      <Grid>
+        <Text
+          h2
+          className={`${styles.textCenter}`}
+          style={{ fontSize: "80px" }}
+        >
           🤐
         </Text>
       </Grid>
       <Grid>
-        <Text h3 style={{ textAlign: "center" }}>
+        <Text h3 className={`${styles.textCenter}`}>
           כניסה לא מאושרת
         </Text>
       </Grid>
-      <Grid>
+      <Grid xs={12}>
         <Button
           type="secondary"
           scale={1.5}
           onClick={() => signIn()}
-          style={{ margin: "auto" }}
+          width="100%"
         >
           <Text b>כניסה</Text>
         </Button>
