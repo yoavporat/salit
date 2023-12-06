@@ -244,10 +244,10 @@ const Unauthorized = () => {
   return (
     <Grid.Container
       gap={2}
-      justify="center"
       alignItems="center"
       direction="column"
       height="100vh"
+      style={{ paddingBlockStart: "24px" }}
     >
       <Grid>
         <Text h1 className={`${styles.textCenter}`}>
@@ -268,7 +268,7 @@ const Unauthorized = () => {
           כניסה לא מאושרת
         </Text>
       </Grid>
-      <Grid xs={12}>
+      <Grid>
         <Button
           type="secondary"
           scale={1.5}
