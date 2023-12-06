@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import styles from "@/styles/Home.module.css";
 import { Notion } from "@/lib/notion";
 import {
@@ -185,7 +185,7 @@ export default function Home(props: { users: Array<any> }) {
           justify="center"
           direction="column"
           alignItems="center"
-          style={{ padding: PADDING, gap: "20px" }}
+          style={{ padding: "24px 12px", gap: "20px" }}
         >
           <Grid>
             <Text h1>רשימת שמירה</Text>
@@ -213,6 +213,16 @@ export default function Home(props: { users: Array<any> }) {
               </Grid>
               <Grid className={`${styles.grid}`}>
                 <Shifts shifts={shifts} />
+              </Grid>
+              <Grid>
+                <Button
+                  type="secondary"
+                  scale={1.5}
+                  onClick={() => signOut()}
+                  width="100%"
+                >
+                  <Text b>Logout</Text>
+                </Button>
               </Grid>
             </>
           )}
