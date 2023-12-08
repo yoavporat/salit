@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
+  getPageIcon,
+  getPageTitle,
   getSquadMembers,
   identifyShift,
   toDate,
@@ -123,10 +125,17 @@ export default function Home(props: { users: Array<any> }) {
     const subtitle = `${toDate(time.start)} @ ${toTime(
       time.end as string
     )} - ${toTime(time.start)}`;
-    const title =
-      props.type.type === "unknown"
-        ? subtitle
-        : `${props.type.emoji} ${props.type.name}`;
+
+    let title: string;
+    if (props.type.type === "event") {
+      title = `${getPageIcon(props.shift, props.type.emoji)} ${getPageTitle(
+        props.shift
+      )}`;
+    } else if (props.type.type === "unknown") {
+      title = subtitle;
+    } else {
+      title = `${props.type.emoji} ${props.type.name}`;
+    }
 
     return (
       <Collapse
