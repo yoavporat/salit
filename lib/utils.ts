@@ -110,3 +110,17 @@ export function getShiftParticipents(
 export function getSquadMembers(users: TUser[]) {
   return users.filter((user) => user.type === "כיתת כוננות");
 }
+
+export function getPageTitle(page: PageObjectResponse) {
+  if (page.properties["משמרת"].type === "title") {
+    return page.properties["משמרת"].title[0].plain_text;
+  }
+  return "";
+}
+
+export function getPageIcon(page: PageObjectResponse, fallback: string) {
+  if (page.icon && page.icon.type === "emoji") {
+    return page.icon.emoji;
+  }
+  return fallback;
+}
