@@ -127,13 +127,12 @@ export default function Home(props: { users: Array<any> }) {
     )} - ${toTime(time.start)}`;
 
     let title: string;
-    if (props.type.type === "unknown") {
-      title = subtitle;
-    }
     if (props.type.type === "event") {
       title = `${getPageIcon(props.shift, props.type.emoji)} ${getPageTitle(
         props.shift
       )}`;
+    } else if (props.type.type === "unknown") {
+      title = subtitle;
     } else {
       title = `${props.type.emoji} ${props.type.name}`;
     }
