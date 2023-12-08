@@ -1,7 +1,7 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "school" | "unknown";
+  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "event" | "unknown";
   name: string;
   emoji: string;
 };
@@ -12,7 +12,7 @@ export enum Positions {
   FLOWERS = "פרחים",
   GATE = "ש״ג",
   DRONE = "רחפן",
-  SCHOOL = "בית ספר",
+  EVENT = "אירוע",
 }
 
 export type TShiftParticipents = TShift & Array<string>;
@@ -78,10 +78,10 @@ export function identifyShift(
     return { type: "drone", name: "רחפן", emoji: "✈️" };
   }
   if (
-    shift.properties["בית ספר"].type == "relation" &&
-    shift.properties["בית ספר"].relation.some((user) => user.id === userId)
+    shift.properties["אירוע"].type == "relation" &&
+    shift.properties["אירוע"].relation.some((user) => user.id === userId)
   ) {
-    return { type: "school", name: "בית ספר", emoji: "🎓" };
+    return { type: "event", name: "אירוע", emoji: "✨" };
   }
   if (
     shift.properties["ש״ג"].type == "relation" &&
