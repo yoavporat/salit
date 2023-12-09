@@ -19,9 +19,7 @@ export const ShiftActions = ({ calData, disabled }: IProps) => {
       <Divider my={3} />
       <Grid.Container justify="space-between" alignItems="center">
         <Grid>
-          <Text b p>
-            הוספה ליומן
-          </Text>
+          <Text b>הוספה ליומן</Text>
         </Grid>
         <Grid>
           <Button
