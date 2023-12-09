@@ -1,7 +1,7 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "school" | "unknown";
+  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "event" | "unknown";
   name: string;
   emoji: string;
 };
@@ -12,7 +12,7 @@ export enum Positions {
   FLOWERS = "פרחים",
   GATE = "ש״ג",
   DRONE = "רחפן",
-  SCHOOL = "בית ספר",
+  EVENT = "אירוע",
 }
 
 export type TShiftParticipents = TShift & Array<string>;
@@ -78,10 +78,10 @@ export function identifyShift(
     return { type: "drone", name: "רחפן", emoji: "✈️" };
   }
   if (
-    shift.properties["בית ספר"].type == "relation" &&
-    shift.properties["בית ספר"].relation.some((user) => user.id === userId)
+    shift.properties["אירוע"].type == "relation" &&
+    shift.properties["אירוע"].relation.some((user) => user.id === userId)
   ) {
-    return { type: "school", name: "בית ספר", emoji: "🎓" };
+    return { type: "event", name: "אירוע", emoji: "✨" };
   }
   if (
     shift.properties["ש״ג"].type == "relation" &&
@@ -109,4 +109,18 @@ export function getShiftParticipents(
 
 export function getSquadMembers(users: TUser[]) {
   return users.filter((user) => user.type === "כיתת כוננות");
+}
+
+export function getPageTitle(page: PageObjectResponse) {
+  if (page.properties["משמרת"].type === "title") {
+    return page.properties["משמרת"].title[0].plain_text;
+  }
+  return "";
+}
+
+export function getPageIcon(page: PageObjectResponse, fallback: string) {
+  if (page.icon && page.icon.type === "emoji") {
+    return page.icon.emoji;
+  }
+  return fallback;
 }

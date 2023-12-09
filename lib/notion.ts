@@ -89,7 +89,7 @@ export class Notion {
                 },
               },
               {
-                property: "בית ספר",
+                property: "אירוע",
                 relation: {
                   contains: userId,
                 },

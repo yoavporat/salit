@@ -12,12 +12,27 @@ const ActivePositions = [
   Positions.FLOWERS,
   Positions.GATE,
   Positions.DRONE,
+  Positions.EVENT,
 ];
 
 export const Participents = ({ shift, allUsers }: IProps) => (
   <Grid.Container direction="column" gap={1}>
     {ActivePositions.map((position) => {
       const participents = getShiftParticipents(shift, position, allUsers);
+      if (participents.length === 0) return null;
+
+      if (position === Positions.EVENT) {
+        return (
+          <Grid.Container key={position} gap={1} style={{ padding: "0 8px" }}>
+            {participents.map((participent) => (
+              <Grid key={participent}>
+                <Tag type="lite">{participent}</Tag>
+              </Grid>
+            ))}
+          </Grid.Container>
+        );
+      }
+
       return (
         <Grid key={position}>
           <Grid.Container justify="space-between" alignItems="center">
