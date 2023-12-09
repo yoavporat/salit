@@ -71,7 +71,6 @@ const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
       type="semicircle"
       style={{
         width: windowWidth <= 375 ? "90%" : "100%",
-        pointerEvents: "none",
       }}
       arc={{
         nbSubArcs: 2,
