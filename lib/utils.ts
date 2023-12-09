@@ -124,3 +124,28 @@ export function getPageIcon(page: PageObjectResponse, fallback: string) {
   }
   return fallback;
 }
+
+export function generateCalendarLink({
+  title,
+  startDate,
+  endDate,
+  description,
+}: {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+}) {
+  const url = new URL("https://www.google.com/calendar/render");
+  const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
+  const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
+
+  url.searchParams.append("action", "TEMPLATE");
+  url.searchParams.append("text", title);
+  url.searchParams.append("dates", `${start}/${end}`);
+  description && url.searchParams.append("details", description);
+  url.searchParams.append("location", "סלעית");
+  url.searchParams.append("sf", "true");
+  url.searchParams.append("output", "xml");
+  return url.toString();
+}
