@@ -1,8 +1,9 @@
 import styles from "@/styles/ShiftCard.module.css";
-import { identifyShift, toRelativeTime, toTime } from "@/lib/utils";
+import { TCalData, identifyShift, toRelativeTime, toTime } from "@/lib/utils";
 import { Card, Divider, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "./Participants";
+import { ShiftActions } from "./ShiftActions";
 
 interface IProps {
   shift: PageObjectResponse;
@@ -25,6 +26,12 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
   )})`;
   const title = isLive ? "המשמרת הנוכחית" : "המשמרת הבאה";
 
+  const calData: TCalData = {
+    title: `${type.name} ${type.emoji}`,
+    startDate: new Date(time.start),
+    endDate: new Date(end),
+  };
+
   return (
     <Card type={isLive ? "violet" : "success"}>
       <Card.Content className={`${styles.cardHeader}`}>
@@ -38,6 +45,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         {type.name && <Text h3>{type.name}</Text>}
         <Text h5>{timeString}</Text>
         <Participents shift={shift} allUsers={allUsers} />
+        <ShiftActions calData={calData} />
       </Card.Content>
     </Card>
   );
