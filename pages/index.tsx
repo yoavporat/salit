@@ -5,7 +5,6 @@ import { Notion } from "@/lib/notion";
 import {
   Button,
   Collapse,
-  Divider,
   Grid,
   Select,
   Spacer,
@@ -16,7 +15,6 @@ import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
-  generateCalendarLink,
   getPageIcon,
   getPageTitle,
   getSquadMembers,
@@ -28,7 +26,8 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
-import { Calendar, Eye } from "@geist-ui/icons";
+import { Eye } from "@geist-ui/icons";
+import { ShiftActions } from "@/components/ShiftActions";
 
 const PADDING = "0 12px";
 
@@ -119,6 +118,7 @@ export default function Home(props: { users: Array<any> }) {
     const time =
       props.shift.properties["זמן"].type == "date" &&
       props.shift.properties["זמן"].date;
+    const isAnonymus = props.type.type === "unknown";
 
     if (!time) {
       return null;
@@ -133,21 +133,16 @@ export default function Home(props: { users: Array<any> }) {
       title = `${getPageIcon(props.shift, props.type.emoji)} ${getPageTitle(
         props.shift
       )}`;
-    } else if (props.type.type === "unknown") {
+    } else if (isAnonymus) {
       title = subtitle;
     } else {
       title = `${props.type.emoji} ${props.type.name}`;
     }
 
-    const onCalClick = () => {
-      window.open(
-        generateCalendarLink({
-          title,
-          startDate: new Date(time.start),
-          endDate: new Date(time.end as string),
-        }),
-        "_blank"
-      );
+    const calData = {
+      title,
+      startDate: new Date(time.start),
+      endDate: new Date(time.end as string),
     };
 
     return (
@@ -156,23 +151,7 @@ export default function Home(props: { users: Array<any> }) {
         subtitle={props.type.type !== "unknown" && subtitle}
       >
         <Participents shift={props.shift} allUsers={allUsers} />
-        <Divider my={3} />
-        <Grid.Container justify="space-between" alignItems="center">
-          <Grid>
-            <Text b p>
-              הוספה ליומן
-            </Text>
-          </Grid>
-          <Grid>
-            <Button
-              onClick={onCalClick}
-              iconRight={<Calendar />}
-              height="50px"
-              width="50px"
-              padding={0}
-            />
-          </Grid>
-        </Grid.Container>
+        <ShiftActions calData={calData} disabled={isAnonymus} />
       </Collapse>
     );
   };

@@ -6,6 +6,13 @@ export type TShift = {
   emoji: string;
 };
 
+export type TCalData = {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+};
+
 export enum Positions {
   PATROL = "סיור",
   EAST = "מזרחי",
@@ -130,12 +137,7 @@ export function generateCalendarLink({
   startDate,
   endDate,
   description,
-}: {
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  description?: string;
-}) {
+}: TCalData) {
   const url = new URL("https://www.google.com/calendar/render");
   const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
   const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
