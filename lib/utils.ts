@@ -6,6 +6,13 @@ export type TShift = {
   emoji: string;
 };
 
+export type TCalData = {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+};
+
 export enum Positions {
   PATROL = "סיור",
   EAST = "מזרחי",
@@ -21,6 +28,7 @@ export type TUser = {
   id: string;
   status: string;
   type: string;
+  phone: string;
 };
 
 export function toDate(date: string) {
@@ -99,9 +107,9 @@ export function getShiftParticipents(
 ) {
   const relation = shift.properties[type];
   if (relation.type === "relation") {
-    return relation.relation.map(
-      (p) => allUsers.find((u) => u.id === p.id)?.username
-    ) as Array<string>;
+    return relation.relation.map((p) =>
+      allUsers.find((u) => u.id === p.id)
+    ) as Array<TUser>;
   } else {
     return [];
   }
@@ -123,4 +131,24 @@ export function getPageIcon(page: PageObjectResponse, fallback: string) {
     return page.icon.emoji;
   }
   return fallback;
+}
+
+export function generateCalendarLink({
+  title,
+  startDate,
+  endDate,
+  description,
+}: TCalData) {
+  const url = new URL("https://www.google.com/calendar/render");
+  const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
+  const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
+
+  url.searchParams.append("action", "TEMPLATE");
+  url.searchParams.append("text", title);
+  url.searchParams.append("dates", `${start}/${end}`);
+  description && url.searchParams.append("details", description);
+  url.searchParams.append("location", "סלעית");
+  url.searchParams.append("sf", "true");
+  url.searchParams.append("output", "xml");
+  return url.toString();
 }

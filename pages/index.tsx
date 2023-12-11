@@ -27,6 +27,7 @@ import { Participents } from "@/components/Participants";
 import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
 import { Eye } from "@geist-ui/icons";
+import { ShiftActions } from "@/components/ShiftActions";
 
 const PADDING = "0 12px";
 
@@ -119,6 +120,7 @@ export default function Home(props: { users: Array<any> }) {
     const time =
       props.shift.properties["זמן"].type == "date" &&
       props.shift.properties["זמן"].date;
+    const isAnonymus = props.type.type === "unknown";
 
     if (!time) {
       return null;
@@ -133,11 +135,17 @@ export default function Home(props: { users: Array<any> }) {
       title = `${getPageIcon(props.shift, props.type.emoji)} ${getPageTitle(
         props.shift
       )}`;
-    } else if (props.type.type === "unknown") {
+    } else if (isAnonymus) {
       title = subtitle;
     } else {
       title = `${props.type.emoji} ${props.type.name}`;
     }
+
+    const calData = {
+      title,
+      startDate: new Date(time.start),
+      endDate: new Date(time.end as string),
+    };
 
     return (
       <Collapse
@@ -145,6 +153,7 @@ export default function Home(props: { users: Array<any> }) {
         subtitle={props.type.type !== "unknown" && subtitle}
       >
         <Participents shift={props.shift} allUsers={allUsers} />
+        <ShiftActions calData={calData} disabled={isAnonymus} />
       </Collapse>
     );
   };

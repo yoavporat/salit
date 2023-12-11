@@ -1,10 +1,10 @@
-import { Positions, getShiftParticipents } from "@/lib/utils";
+import { Positions, TUser, getShiftParticipents } from "@/lib/utils";
 import { Grid, Tag, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 interface IProps {
   shift: PageObjectResponse;
-  allUsers: Array<any>;
+  allUsers: Array<TUser>;
 }
 
 const ActivePositions = [
@@ -23,12 +23,20 @@ export const Participents = ({ shift, allUsers }: IProps) => (
 
       if (position === Positions.EVENT) {
         return (
-          <Grid.Container key={position} gap={1} style={{ padding: "0 8px" }}>
+          <Grid.Container
+            key={position}
+            gap={1}
+            style={{ padding: "0 8px" }}
+            alignItems="center"
+          >
             {participents.map((participent) => (
-              <Grid key={participent}>
-                <Tag type="lite">{participent}</Tag>
+              <Grid key={participent.id}>
+                <UserTag user={participent} />
               </Grid>
             ))}
+            <Grid>
+              <Text b>{`(${participents.length})`}</Text>
+            </Grid>
           </Grid.Container>
         );
       }
@@ -43,14 +51,14 @@ export const Participents = ({ shift, allUsers }: IProps) => (
               {participents.length > 1 ? (
                 <Grid.Container gap={1}>
                   <Grid>
-                    <Tag type="lite">{participents[0]}</Tag>
+                    <UserTag user={participents[0]} />
                   </Grid>
                   <Grid>
-                    <Tag type="lite">{participents[1]}</Tag>
+                    <UserTag user={participents[1]} />
                   </Grid>
                 </Grid.Container>
               ) : (
-                <Tag type="lite">{participents[0]}</Tag>
+                <UserTag user={participents[0]} />
               )}
             </Grid>
           </Grid.Container>
@@ -59,3 +67,15 @@ export const Participents = ({ shift, allUsers }: IProps) => (
     })}
   </Grid.Container>
 );
+
+const UserTag = ({ user }: { user: TUser }) => {
+  if (user.phone) {
+    return (
+      <Tag type="lite">
+        <a href={`tel:${user.phone}`}>{user.username}</a>
+      </Tag>
+    );
+  } else {
+    return <Tag type="lite">{user.username}</Tag>;
+  }
+};
