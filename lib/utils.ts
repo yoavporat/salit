@@ -28,6 +28,7 @@ export type TUser = {
   id: string;
   status: string;
   type: string;
+  phone: string;
 };
 
 export function toDate(date: string) {
@@ -106,9 +107,9 @@ export function getShiftParticipents(
 ) {
   const relation = shift.properties[type];
   if (relation.type === "relation") {
-    return relation.relation.map(
-      (p) => allUsers.find((u) => u.id === p.id)?.username
-    ) as Array<string>;
+    return relation.relation.map((p) =>
+      allUsers.find((u) => u.id === p.id)
+    ) as Array<TUser>;
   } else {
     return [];
   }

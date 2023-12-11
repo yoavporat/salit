@@ -12,11 +12,6 @@ body {
   direction: rtl;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 div.subtitle {
   font-weight: 700;
 }

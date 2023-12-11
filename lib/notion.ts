@@ -38,6 +38,9 @@ export class Notion {
             user.properties["שיוך"].type === "multi_select" &&
             user.properties["שיוך"].multi_select.length > 0 &&
             user.properties["שיוך"].multi_select[0].name,
+          phone:
+            user.properties["טלפון"].type === "phone_number" &&
+            user.properties["טלפון"].phone_number,
         };
       }
     }) as TUser[];
