@@ -1,5 +1,12 @@
 import styles from "@/styles/ShiftCard.module.css";
-import { TCalData, identifyShift, toRelativeTime, toTime } from "@/lib/utils";
+import {
+  TCalData,
+  getPageIcon,
+  getPageTitle,
+  identifyShift,
+  toRelativeTime,
+  toTime,
+} from "@/lib/utils";
 import { Card, Divider, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "./Participants";
@@ -38,11 +45,17 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         <Text b my={0}>
           {title}
         </Text>
-        <Text>{type.emoji}</Text>
+        <Text>
+          {type.type === "event" ? getPageIcon(shift, type.emoji) : type.emoji}
+        </Text>
       </Card.Content>
       <Divider h="1px" my={0} />
       <Card.Content>
-        {type.name && <Text h3>{type.name}</Text>}
+        {type.name && (
+          <Text h3>
+            {type.type === "event" ? getPageTitle(shift) : type.name}
+          </Text>
+        )}
         <Text h5>{timeString}</Text>
         <Participents shift={shift} allUsers={allUsers} />
         <ShiftActions calData={calData} />
