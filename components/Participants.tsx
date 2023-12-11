@@ -23,12 +23,20 @@ export const Participents = ({ shift, allUsers }: IProps) => (
 
       if (position === Positions.EVENT) {
         return (
-          <Grid.Container key={position} gap={1} style={{ padding: "0 8px" }}>
+          <Grid.Container
+            key={position}
+            gap={1}
+            style={{ padding: "0 8px" }}
+            alignItems="center"
+          >
             {participents.map((participent) => (
               <Grid key={participent}>
                 <Tag type="lite">{participent}</Tag>
               </Grid>
             ))}
+            <Grid>
+              <Text b>{`(${participents.length})`}</Text>
+            </Grid>
           </Grid.Container>
         );
       }
