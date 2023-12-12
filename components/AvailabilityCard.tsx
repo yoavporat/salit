@@ -15,7 +15,7 @@ interface IProps {
 
 export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
   return (
-    <Card>
+    <Card height="200px">
       <Grid.Container direction="column">
         <Grid>
           {user === undefined ? (
@@ -52,6 +52,7 @@ const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
 
   useEffect(() => {
     const resizeOverride = (event: Event) => {
+      console.log("resizeOverride");
       event.stopPropagation();
       event.preventDefault();
     };
