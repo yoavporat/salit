@@ -15,7 +15,7 @@ interface IProps {
 
 export const AvailabilityCard = ({ user, onToggle, squadData }: IProps) => {
   return (
-    <Card height="200px">
+    <Card>
       <Grid.Container direction="column">
         <Grid>
           {user === undefined ? (
@@ -70,9 +70,6 @@ const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
     <GaugeComponent
       value={Math.round((available.length / 23) * 100)}
       type="semicircle"
-      style={{
-        width: windowWidth <= 375 ? "90%" : "100%",
-      }}
       arc={{
         nbSubArcs: 2,
         subArcs: [
