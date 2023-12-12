@@ -1,6 +1,7 @@
 import { TUser } from "@/lib/utils";
 import { Card, Grid, Text, Toggle, Spinner, useTheme } from "@geist-ui/core";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
@@ -49,13 +50,26 @@ const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
   const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   const theme = useTheme();
 
+  useEffect(() => {
+    const resizeOverride = (event: Event) => {
+      console.log("resizeOverride");
+      event.stopPropagation();
+      event.preventDefault();
+    };
+
+    if (windowWidth <= 375) {
+      window.addEventListener("resize", resizeOverride, { capture: true });
+    }
+
+    return () => {
+      window.removeEventListener("resize", resizeOverride);
+    };
+  }, [windowWidth]);
+
   return (
     <GaugeComponent
       value={Math.round((available.length / 23) * 100)}
       type="semicircle"
-      style={{
-        width: windowWidth <= 375 ? "90%" : "100%",
-      }}
       arc={{
         nbSubArcs: 2,
         subArcs: [

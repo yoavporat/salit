@@ -52,6 +52,7 @@ export default function Home(props: { users: Array<any> }) {
           setLoading(false);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function Home(props: { users: Array<any> }) {
     } else {
       onClear();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allUsers]);
 
   const onAvailabilityToggle = (ev: any) => {
