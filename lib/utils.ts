@@ -1,15 +1,34 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "school";
+  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "event" | "unknown";
   name: string;
   emoji: string;
 };
+
+export type TCalData = {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+};
+
+export enum Positions {
+  PATROL = "סיור",
+  EAST = "מזרחי",
+  FLOWERS = "פרחים",
+  GATE = "ש״ג",
+  DRONE = "רחפן",
+  EVENT = "אירוע",
+}
 
 export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
   username: string;
   id: string;
+  status: string;
+  type: string;
+  phone: string;
 };
 
 export function toDate(date: string) {
@@ -67,12 +86,18 @@ export function identifyShift(
     return { type: "drone", name: "רחפן", emoji: "✈️" };
   }
   if (
-    shift.properties["בית ספר"].type == "relation" &&
-    shift.properties["בית ספר"].relation.some((user) => user.id === userId)
+    shift.properties["אירוע"].type == "relation" &&
+    shift.properties["אירוע"].relation.some((user) => user.id === userId)
   ) {
-    return { type: "school", name: "בית ספר", emoji: "🎓" };
+    return { type: "event", name: "אירוע", emoji: "✨" };
   }
-  return { type: "gate", name: "ש״ג", emoji: "🚧" };
+  if (
+    shift.properties["ש״ג"].type == "relation" &&
+    shift.properties["ש״ג"].relation.some((user) => user.id === userId)
+  ) {
+    return { type: "gate", name: "ש״ג", emoji: "🚧" };
+  }
+  return { type: "unknown", name: "", emoji: "" };
 }
 
 export function getShiftParticipents(
@@ -81,10 +106,49 @@ export function getShiftParticipents(
   allUsers: TUser[]
 ) {
   const relation = shift.properties[type];
-  return (
-    relation.type === "relation" &&
-    (relation.relation.map(
-      (p) => allUsers.find((u) => u.id === p.id)?.username
-    ) as Array<string>)
-  );
+  if (relation.type === "relation") {
+    return relation.relation.map((p) =>
+      allUsers.find((u) => u.id === p.id)
+    ) as Array<TUser>;
+  } else {
+    return [];
+  }
+}
+
+export function getSquadMembers(users: TUser[]) {
+  return users.filter((user) => user.type === "כיתת כוננות");
+}
+
+export function getPageTitle(page: PageObjectResponse) {
+  if (page.properties["משמרת"].type === "title") {
+    return page.properties["משמרת"].title[0].plain_text;
+  }
+  return "";
+}
+
+export function getPageIcon(page: PageObjectResponse, fallback: string) {
+  if (page.icon && page.icon.type === "emoji") {
+    return page.icon.emoji;
+  }
+  return fallback;
+}
+
+export function generateCalendarLink({
+  title,
+  startDate,
+  endDate,
+  description,
+}: TCalData) {
+  const url = new URL("https://www.google.com/calendar/render");
+  const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
+  const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
+
+  url.searchParams.append("action", "TEMPLATE");
+  url.searchParams.append("text", title);
+  url.searchParams.append("dates", `${start}/${end}`);
+  description && url.searchParams.append("details", description);
+  url.searchParams.append("location", "סלעית");
+  url.searchParams.append("sf", "true");
+  url.searchParams.append("output", "xml");
+  return url.toString();
 }

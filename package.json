@@ -11,10 +11,15 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^9.7.2",
     "@geist-ui/core": "^2.3.8",
+    "@geist-ui/icons": "^1.0.2",
     "@notionhq/client": "^2.2.13",
+    "lodash": "^4.17.21",
     "next": "14.0.1",
+    "next-auth": "^4.24.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-gauge-component": "^1.1.30",
+    "styled-components": "^6.1.1"
   },
   "devDependencies": {
     "@types/node": "^20",

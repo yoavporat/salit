@@ -1,83 +1,86 @@
-import styles from "@/styles/Participants.module.css";
-import { getShiftParticipents } from "@/lib/utils";
-import { Tag, Text } from "@geist-ui/core";
+import { Positions, TUser, getShiftParticipents } from "@/lib/utils";
+import { Grid, Tag, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import styled from "styled-components";
 
 interface IProps {
   shift: PageObjectResponse;
-  allUsers: Array<any>;
+  allUsers: Array<TUser>;
 }
 
-export const Participents = ({ shift, allUsers }: IProps) => {
-  const patrol = getShiftParticipents(shift, "סיור", allUsers);
-  const flowers = getShiftParticipents(shift, "פרחים", allUsers);
-  const east = getShiftParticipents(shift, "מזרחי", allUsers);
-  const gate = getShiftParticipents(shift, "ש״ג", allUsers);
-  const school = getShiftParticipents(shift, "בית ספר", allUsers);
-  const drone = getShiftParticipents(shift, "רחפן", allUsers);
+const ActivePositions = [
+  Positions.PATROL,
+  Positions.FLOWERS,
+  Positions.GATE,
+  Positions.DRONE,
+  Positions.EVENT,
+];
 
-  return (
-    <>
-      {patrol && patrol.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            סיור
-          </Text>
-          <div className={`${styles.tagsWrapper}`}>
-            <Tag type="lite">{patrol[0]}</Tag>
-            <Tag type="lite">{patrol[1]}</Tag>
-          </div>
-        </div>
-      )}
-      {east && east.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            מזרחי
-          </Text>
-          <div className={`${styles.tagsWrapper}`}>
-            <Tag type="lite">{east[0]}</Tag>
-            {east[1] && <Tag type="lite">{east[1]}</Tag>}
-          </div>
-        </div>
-      )}
-      {flowers && flowers.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            פרחים
-          </Text>
-          <div className={`${styles.tagsWrapper}`}>
-            <Tag type="lite">{flowers[0]}</Tag>
-            {flowers[1] && <Tag type="lite">{flowers[1]}</Tag>}
-          </div>
-        </div>
-      )}
-      {gate && gate.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            ש״ג
-          </Text>
-          <div className={`${styles.tagsWrapper}`}>
-            <Tag type="lite">{gate[0]}</Tag>
-            {gate[1] && <Tag type="lite">{gate[1]}</Tag>}
-          </div>
-        </div>
-      )}
-      {school && school.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            בית ספר
-          </Text>
-          <Tag type="lite">{school[0]}</Tag>
-        </div>
-      )}
-      {drone && drone.length > 0 && (
-        <div className={`${styles.shiftEntry}`}>
-          <Text p b>
-            רחפן
-          </Text>
-          <Tag type="lite">{drone[0]}</Tag>
-        </div>
-      )}
-    </>
-  );
+export const Participents = ({ shift, allUsers }: IProps) => (
+  <Grid.Container direction="column" gap={1}>
+    {ActivePositions.map((position) => {
+      const participents = getShiftParticipents(shift, position, allUsers);
+      if (participents.length === 0) return null;
+
+      if (position === Positions.EVENT) {
+        return (
+          <Grid.Container
+            key={position}
+            gap={1}
+            style={{ padding: "0 8px" }}
+            alignItems="center"
+          >
+            {participents.map((participent) => (
+              <Grid key={participent.id}>
+                <UserTag user={participent} />
+              </Grid>
+            ))}
+            <Grid>
+              <Text b>{`(${participents.length})`}</Text>
+            </Grid>
+          </Grid.Container>
+        );
+      }
+
+      return (
+        <Grid key={position}>
+          <Grid.Container justify="space-between" alignItems="center">
+            <Grid>
+              <Text b>{position}</Text>
+            </Grid>
+            <Grid>
+              {participents.length > 1 ? (
+                <Grid.Container gap={1}>
+                  <Grid>
+                    <UserTag user={participents[0]} />
+                  </Grid>
+                  <Grid>
+                    <UserTag user={participents[1]} />
+                  </Grid>
+                </Grid.Container>
+              ) : (
+                <UserTag user={participents[0]} />
+              )}
+            </Grid>
+          </Grid.Container>
+        </Grid>
+      );
+    })}
+  </Grid.Container>
+);
+
+const UserTag = ({ user }: { user: TUser }) => {
+  if (user.phone) {
+    return (
+      <Tag type="lite">
+        <UserLink href={`tel:${user.phone}`}>{user.username}</UserLink>
+      </Tag>
+    );
+  } else {
+    return <Tag type="lite">{user.username}</Tag>;
+  }
 };
+
+const UserLink = styled.a`
+  color: inherit;
+`;
