@@ -1,6 +1,7 @@
 import { Positions, TUser, getShiftParticipents } from "@/lib/utils";
 import { Grid, Tag, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import styled from "styled-components";
 
 interface IProps {
   shift: PageObjectResponse;
@@ -72,10 +73,14 @@ const UserTag = ({ user }: { user: TUser }) => {
   if (user.phone) {
     return (
       <Tag type="lite">
-        <a href={`tel:${user.phone}`}>{user.username}</a>
+        <UserLink href={`tel:${user.phone}`}>{user.username}</UserLink>
       </Tag>
     );
   } else {
     return <Tag type="lite">{user.username}</Tag>;
   }
 };
+
+const UserLink = styled.a`
+  color: inherit;
+`;
