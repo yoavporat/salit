@@ -31,6 +31,10 @@ export type TUser = {
   phone: string;
 };
 
+function parseDate(date: Date) {
+  return date.toISOString().replace(/-|:|\.\d+/g, "");
+}
+
 export function toDate(date: string) {
   const options: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -133,22 +137,40 @@ export function getPageIcon(page: PageObjectResponse, fallback: string) {
   return fallback;
 }
 
-export function generateCalendarLink({
+export function generateGoogleCalendarLink({
   title,
   startDate,
   endDate,
   description,
 }: TCalData) {
   const url = new URL("https://www.google.com/calendar/render");
-  const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
-  const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
 
   url.searchParams.append("action", "TEMPLATE");
   url.searchParams.append("text", title);
-  url.searchParams.append("dates", `${start}/${end}`);
+  url.searchParams.append(
+    "dates",
+    `${parseDate(startDate)}/${parseDate(endDate)}`
+  );
   description && url.searchParams.append("details", description);
   url.searchParams.append("location", "סלעית");
   url.searchParams.append("sf", "true");
   url.searchParams.append("output", "xml");
+  return url.toString();
+}
+
+export function generateOutlookCalendarLink({
+  title,
+  startDate,
+  endDate,
+  description,
+}: TCalData) {
+  const url = new URL("https://outlook.live.com/calendar/0/deeplink/compose");
+
+  url.searchParams.append("rru", "addevent");
+  url.searchParams.append("subject", title);
+  url.searchParams.append("startdt", parseDate(startDate));
+  url.searchParams.append("enddt", parseDate(endDate));
+  description && url.searchParams.append("body", description);
+  url.searchParams.append("location", "סלעית");
   return url.toString();
 }
