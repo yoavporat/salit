@@ -1,5 +1,5 @@
 import { TCalData, generateCalendarLink } from "@/lib/utils";
-import { Button, Divider, Grid, Text } from "@geist-ui/core";
+import { Button, Grid, Text } from "@geist-ui/core";
 import { Calendar } from "@geist-ui/icons";
 
 interface IProps {
@@ -16,7 +16,6 @@ export const ShiftActions = ({ calData, disabled }: IProps) => {
 
   return (
     <>
-      <Divider my={3} />
       <Grid.Container justify="space-between" alignItems="center">
         <Grid>
           <Text b>הוספה ליומן</Text>
@@ -24,7 +23,7 @@ export const ShiftActions = ({ calData, disabled }: IProps) => {
         <Grid>
           <Button
             onClick={onCalClick}
-            iconRight={<Calendar />}
+            icon={<Calendar />}
             height="50px"
             width="50px"
             padding={0}

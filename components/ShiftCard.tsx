@@ -50,7 +50,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         </Text>
       </Card.Content>
       <Divider h="1px" my={0} />
-      <Card.Content>
+      <Card.Content pb={2}>
         {type.name && (
           <Text h3>
             {type.type === "event" ? getPageTitle(shift) : type.name}
@@ -58,8 +58,10 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         )}
         <Text h5>{timeString}</Text>
         <Participents shift={shift} allUsers={allUsers} />
-        <ShiftActions calData={calData} />
       </Card.Content>
+      <Card.Footer disableAutoMargin>
+        <ShiftActions calData={calData} />
+      </Card.Footer>
     </Card>
   );
 };
