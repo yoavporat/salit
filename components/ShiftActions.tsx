@@ -3,13 +3,10 @@ import { Button, Grid, Text } from "@geist-ui/core";
 
 interface IProps {
   calData: TCalData;
-  disabled?: boolean;
   transparent?: boolean;
 }
 
-export const ShiftActions = ({ calData, disabled, transparent }: IProps) => {
-  if (disabled) return null;
-
+export const ShiftActions = ({ calData, transparent }: IProps) => {
   return (
     <>
       <Grid.Container justify="space-between" alignItems="center">
@@ -24,7 +21,6 @@ export const ShiftActions = ({ calData, disabled, transparent }: IProps) => {
             height="50px"
             width="50px"
             padding={0}
-            disabled={disabled}
             type={transparent ? "success" : "default"}
           />
         </Grid>
