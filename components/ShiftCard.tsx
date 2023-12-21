@@ -60,9 +60,12 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         <Participents shift={shift} allUsers={allUsers} />
       </Card.Content>
       {!isLive && (
-        <Card.Footer disableAutoMargin>
-          <ShiftActions calData={calData} transparent />
-        </Card.Footer>
+        <>
+          <Divider h="1px" my={0} />
+          <Card.Content pl={0}>
+            <ShiftActions calData={calData} transparent />
+          </Card.Content>
+        </>
       )}
     </Card>
   );

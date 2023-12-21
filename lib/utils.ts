@@ -157,20 +157,3 @@ export function generateGoogleCalendarLink({
   url.searchParams.append("output", "xml");
   return url.toString();
 }
-
-export function generateOutlookCalendarLink({
-  title,
-  startDate,
-  endDate,
-  description,
-}: TCalData) {
-  const url = new URL("https://outlook.live.com/calendar/0/deeplink/compose");
-
-  url.searchParams.append("rru", "addevent");
-  url.searchParams.append("subject", title);
-  url.searchParams.append("startdt", parseDate(startDate));
-  url.searchParams.append("enddt", parseDate(endDate));
-  description && url.searchParams.append("body", description);
-  url.searchParams.append("location", "סלעית");
-  return url.toString();
-}
