@@ -56,8 +56,8 @@ export function toRelativeTime(date: string) {
   const rtf = new Intl.RelativeTimeFormat("he-IL", { numeric: "auto" });
   const elapsed = (new Date(date).getTime() - Date.now()) / 1000;
   const elapsedHours = Math.round(elapsed / 60 / 60);
-  return elapsedHours > 24
-    ? rtf.format(Math.round(elapsed / 60 / 60 / 24), "day")
+  return elapsedHours > 48
+    ? rtf.format(Math.round(elapsedHours / 24), "day")
     : rtf.format(Math.round(elapsedHours), "hour");
 }
 
