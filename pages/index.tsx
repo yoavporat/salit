@@ -154,8 +154,12 @@ export default function Home(props: { users: Array<any> }) {
         subtitle={props.type.type !== "unknown" && subtitle}
       >
         <Participents shift={props.shift} allUsers={allUsers} />
-        <Divider my={2} />
-        <ShiftActions calData={calData} disabled={isAnonymus} />
+        {isAnonymus ? null : (
+          <>
+            <Divider my={2} />
+            <ShiftActions calData={calData} />
+          </>
+        )}
       </Collapse>
     );
   };
