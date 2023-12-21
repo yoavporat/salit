@@ -62,7 +62,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
       {!isLive && (
         <>
           <Divider h="1px" my={0} />
-          <Card.Content pl={0}>
+          <Card.Content>
             <ShiftActions calData={calData} transparent />
           </Card.Content>
         </>
