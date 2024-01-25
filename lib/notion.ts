@@ -118,7 +118,7 @@ export class Notion {
         property: "זמן",
         date: {
           on_or_after: new Date(
-            new Date().getTime() - 4 * 60 * 60 * 1000
+            new Date().getTime() - 24 * 60 * 60 * 1000
           ).toISOString(),
         },
       },
