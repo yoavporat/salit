@@ -11,6 +11,7 @@ import { Card, Divider, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "./Participants";
 import { ShiftActions } from "./ShiftActions";
+import { toDate } from "@/lib/utils";
 
 interface IProps {
   shift: PageObjectResponse;
@@ -28,7 +29,7 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
   const type = identifyShift(shift, userId);
   const isLive = new Date(time.start) < new Date();
   const end = time.end as string;
-  const timeString = `${toTime(end)} - ${toTime(time.start)} (${toRelativeTime(
+  const timeString = `${toDate(time.start)} @  ${toTime(end)} - ${toTime(time.start)} (${toRelativeTime(
     isLive ? end : time.start
   )})`;
   const title = isLive ? "המשמרת הנוכחית" : "המשמרת הבאה";
