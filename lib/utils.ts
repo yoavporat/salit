@@ -22,6 +22,12 @@ export enum Positions {
   EVENT = "אירוע",
 }
 
+export enum Status {
+  AVAILABLE = "פעיל",
+  UNAVAILABLE = "לא פעיל",
+  ONCALL = "מילואים",
+}
+
 export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
   username: string;
@@ -148,9 +154,11 @@ export function generateGoogleCalendarLink({
   url.searchParams.append("action", "TEMPLATE");
   url.searchParams.append("text", title);
 
-  // in case that there is an overlap, and a shift start in one day and ends in the next day, 
+  // in case that there is an overlap, and a shift start in one day and ends in the next day,
   // the endDate got the same day, so we add another day to the endDate
-  if(startDate > endDate) endDate.setDate(endDate.getDate() + 1);
+  if (startDate > endDate) {
+    endDate.setDate(endDate.getDate() + 1);
+  }
 
   url.searchParams.append(
     "dates",
