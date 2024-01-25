@@ -230,13 +230,15 @@ export default function Home(props: { users: Array<any> }) {
                   squadData={getSquadMembers(allUsers)}
                 />
               </Grid>
-              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                <ShiftCard
-                  shift={shifts[0]}
-                  userId={userId}
-                  allUsers={allUsers}
-                />
-              </Grid>
+              {shifts.length > 0 && (
+                <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                  <ShiftCard
+                    shift={shifts[0]}
+                    userId={userId}
+                    allUsers={allUsers}
+                  />
+                </Grid>
+              )}
               <Grid className={`${styles.grid}`}>
                 <Shifts shifts={shifts} />
               </Grid>
@@ -269,10 +271,12 @@ const Loader = () => {
 
 const NoShifts = () => {
   return (
-    <>
-      <Text h1>🏝️</Text>
+    <Grid.Container direction="column" alignContent="center">
+      <Text h1 style={{ textAlign: "center" }}>
+        🏝️
+      </Text>
       <Text h3>אין משמרות</Text>
-    </>
+    </Grid.Container>
   );
 };
 
