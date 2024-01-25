@@ -322,7 +322,7 @@ const Unauthorized = () => {
   );
 };
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const allUsers = await new Notion().getAllUsers();
   return {
     props: {
