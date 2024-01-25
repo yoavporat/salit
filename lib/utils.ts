@@ -147,6 +147,11 @@ export function generateGoogleCalendarLink({
 
   url.searchParams.append("action", "TEMPLATE");
   url.searchParams.append("text", title);
+
+  // in case that there is an overlap, and a shift start in one day and ends in the next day, 
+  // the endDate got the same day, so we add another day to the endDate
+  if(startDate > endDate) endDate.setDate(endDate.getDate() + 1);
+
   url.searchParams.append(
     "dates",
     `${parseDate(startDate)}/${parseDate(endDate)}`
