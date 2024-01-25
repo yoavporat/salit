@@ -22,6 +22,12 @@ export enum Positions {
   EVENT = "אירוע",
 }
 
+export enum Status {
+  AVAILABLE = "פעיל",
+  UNAVAILABLE = "לא פעיל",
+  ONCALL = "מילואים",
+}
+
 export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
   username: string;
