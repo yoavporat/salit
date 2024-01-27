@@ -44,7 +44,7 @@ export const Participents = ({ shift, allUsers }: IProps) => (
       }
 
       return (
-        <Grid key={position} style={{ padding: 0 }}>
+        <Grid key={position} padding={0}>
           <Wrapper>
             <Grid>
               <Text b>{position}</Text>
