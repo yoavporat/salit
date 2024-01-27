@@ -14,6 +14,7 @@ const ActivePositions = [
   Positions.GATE,
   Positions.DRONE,
   Positions.EVENT,
+  Positions.ONCALL,
 ];
 
 export const Participents = ({ shift, allUsers }: IProps) => (
@@ -43,26 +44,27 @@ export const Participents = ({ shift, allUsers }: IProps) => (
       }
 
       return (
-        <Grid key={position}>
-          <Grid.Container justify="space-between" alignItems="center">
+        <Grid key={position} padding={0}>
+          <Wrapper>
             <Grid>
               <Text b>{position}</Text>
             </Grid>
             <Grid>
               {participents.length > 1 ? (
-                <Grid.Container gap={1}>
-                  <Grid>
-                    <UserTag user={participents[0]} />
-                  </Grid>
-                  <Grid>
-                    <UserTag user={participents[1]} />
-                  </Grid>
+                <Grid.Container gap={1} justify="flex-end">
+                  {participents.map((participent) => {
+                    return (
+                      <Grid key={participent.id}>
+                        <UserTag user={participent} />
+                      </Grid>
+                    );
+                  })}
                 </Grid.Container>
               ) : (
                 <UserTag user={participents[0]} />
               )}
             </Grid>
-          </Grid.Container>
+          </Wrapper>
         </Grid>
       );
     })}
@@ -83,4 +85,9 @@ const UserTag = ({ user }: { user: TUser }) => {
 
 const UserLink = styled.a`
   color: inherit;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
