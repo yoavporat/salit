@@ -68,7 +68,7 @@ export class Notion {
                 },
               },
               {
-                property: "מזרחי",
+                property: "כוננות",
                 relation: {
                   contains: userId,
                 },

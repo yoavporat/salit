@@ -1,7 +1,14 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "event" | "unknown";
+  type:
+    | "patrol"
+    | "oncall"
+    | "flowers"
+    | "gate"
+    | "drone"
+    | "event"
+    | "unknown";
   name: string;
   emoji: string;
 };
@@ -15,7 +22,7 @@ export type TCalData = {
 
 export enum Positions {
   PATROL = "סיור",
-  EAST = "מזרחי",
+  ONCALL = "כוננות",
   FLOWERS = "פרחים",
   GATE = "ש״ג",
   DRONE = "רחפן",
@@ -78,10 +85,10 @@ export function identifyShift(
     return { type: "patrol", name: "סיור", emoji: "🚔" };
   }
   if (
-    shift.properties["מזרחי"].type == "relation" &&
-    shift.properties["מזרחי"].relation.some((user) => user.id === userId)
+    shift.properties["כוננות"].type == "relation" &&
+    shift.properties["כוננות"].relation.some((user) => user.id === userId)
   ) {
-    return { type: "east", name: "מזרחי", emoji: "🕌" };
+    return { type: "oncall", name: "כוננות", emoji: "🕌" };
   }
   if (
     shift.properties["פרחים"].type == "relation" &&
