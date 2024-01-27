@@ -79,40 +79,50 @@ export function identifyShift(
   userId: string
 ): TShift {
   if (
-    shift.properties["סיור"].type == "relation" &&
-    shift.properties["סיור"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.PATROL].type == "relation" &&
+    shift.properties[Positions.PATROL].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "patrol", name: "סיור", emoji: "🚔" };
+    return { type: "patrol", name: Positions.PATROL, emoji: "🚔" };
   }
   if (
-    shift.properties["כוננות"].type == "relation" &&
-    shift.properties["כוננות"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.ONCALL].type == "relation" &&
+    shift.properties[Positions.ONCALL].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "oncall", name: "כוננות", emoji: "🕌" };
+    return { type: "oncall", name: Positions.ONCALL, emoji: "🐴" };
   }
   if (
-    shift.properties["פרחים"].type == "relation" &&
-    shift.properties["פרחים"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.FLOWERS].type == "relation" &&
+    shift.properties[Positions.FLOWERS].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "flowers", name: "פרחים", emoji: "🌷" };
+    return { type: "flowers", name: Positions.FLOWERS, emoji: "🌷" };
   }
   if (
-    shift.properties["רחפן"].type == "relation" &&
-    shift.properties["רחפן"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.DRONE].type == "relation" &&
+    shift.properties[Positions.DRONE].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "drone", name: "רחפן", emoji: "✈️" };
+    return { type: "drone", name: Positions.DRONE, emoji: "✈️" };
   }
   if (
-    shift.properties["אירוע"].type == "relation" &&
-    shift.properties["אירוע"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.EVENT].type == "relation" &&
+    shift.properties[Positions.EVENT].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "event", name: "אירוע", emoji: "✨" };
+    return { type: "event", name: Positions.EVENT, emoji: "✨" };
   }
   if (
-    shift.properties["ש״ג"].type == "relation" &&
-    shift.properties["ש״ג"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.GATE].type == "relation" &&
+    shift.properties[Positions.GATE].relation.some((user) => user.id === userId)
   ) {
-    return { type: "gate", name: "ש״ג", emoji: "🚧" };
+    return { type: "gate", name: Positions.GATE, emoji: "🚧" };
   }
   return { type: "unknown", name: "", emoji: "" };
 }

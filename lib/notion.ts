@@ -1,5 +1,5 @@
 import { Client, isFullPage } from "@notionhq/client";
-import { TUser } from "./utils";
+import { Positions, TUser } from "./utils";
 
 const ShiftsDB = "2564fd1207ab415386bac64fbb17a46c";
 const SadakDB = "b43d42afe4aa47d7ba2b863c4415e977";
@@ -62,37 +62,37 @@ export class Notion {
           {
             or: [
               {
-                property: "סיור",
+                property: Positions.PATROL,
                 relation: {
                   contains: userId,
                 },
               },
               {
-                property: "כוננות",
+                property: Positions.ONCALL,
                 relation: {
                   contains: userId,
                 },
               },
               {
-                property: "פרחים",
+                property: Positions.FLOWERS,
                 relation: {
                   contains: userId,
                 },
               },
               {
-                property: "ש״ג",
+                property: Positions.GATE,
                 relation: {
                   contains: userId,
                 },
               },
               {
-                property: "רחפן",
+                property: Positions.DRONE,
                 relation: {
                   contains: userId,
                 },
               },
               {
-                property: "אירוע",
+                property: Positions.EVENT,
                 relation: {
                   contains: userId,
                 },
