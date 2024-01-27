@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
+  UserType,
   getPageIcon,
   getPageTitle,
   getSquadMembers,
@@ -39,7 +40,7 @@ export default function Home(props: { users: Array<any> }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
     if (userId) {
@@ -196,7 +197,7 @@ export default function Home(props: { users: Array<any> }) {
     );
   };
 
-  if (!session) {
+  if (sessionStatus === "unauthenticated") {
     return <Unauthorized />;
   }
 
@@ -223,13 +224,15 @@ export default function Home(props: { users: Array<any> }) {
             </Grid>
           ) : (
             <>
-              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                <AvailabilityCard
-                  user={user}
-                  onToggle={onAvailabilityToggle}
-                  squadData={getSquadMembers(allUsers)}
-                />
-              </Grid>
+              {user?.type === UserType.SQUAD ? (
+                <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                  <AvailabilityCard
+                    user={user}
+                    onToggle={onAvailabilityToggle}
+                    squadData={getSquadMembers(allUsers)}
+                  />
+                </Grid>
+              ) : null}
               {shifts.length > 0 && (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
                   <ShiftCard

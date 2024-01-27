@@ -32,7 +32,12 @@ export enum Positions {
 export enum Status {
   AVAILABLE = "פעיל",
   UNAVAILABLE = "לא פעיל",
-  ONCALL = "מילואים",
+  ONCALL = "כונן",
+}
+
+export enum UserType {
+  SQUAD = "כיתת כוננות",
+  BAR = "בר שמירה",
 }
 
 export type TShiftParticipents = TShift & Array<string>;
@@ -40,7 +45,7 @@ export type TUser = {
   username: string;
   id: string;
   status: string;
-  type: string;
+  type: UserType;
   phone: string;
 };
 
