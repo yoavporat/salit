@@ -224,7 +224,7 @@ export default function Home(props: { users: Array<any> }) {
             </Grid>
           ) : (
             <>
-              {user?.type === UserType.SQUAD ? (
+              {user?.type === UserType.BAR ? null : (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
                   <AvailabilityCard
                     user={user}
@@ -232,7 +232,7 @@ export default function Home(props: { users: Array<any> }) {
                     squadData={getSquadMembers(allUsers)}
                   />
                 </Grid>
-              ) : null}
+              )}
               {shifts.length > 0 && (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
                   <ShiftCard
