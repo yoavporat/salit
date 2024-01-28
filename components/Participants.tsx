@@ -1,5 +1,11 @@
-import { Positions, TUser, getShiftParticipents } from "@/lib/utils";
-import { Grid, Tag, Text } from "@geist-ui/core";
+import {
+  Positions,
+  TUser,
+  UserType,
+  getShiftParticipents,
+  isDroneOperator,
+} from "@/lib/utils";
+import { Grid, Tag, Text, User } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import styled from "styled-components";
 
@@ -21,7 +27,9 @@ export const Participents = ({ shift, allUsers }: IProps) => (
   <Grid.Container direction="column" gap={1}>
     {ActivePositions.map((position) => {
       const participents = getShiftParticipents(shift, position, allUsers);
-      if (participents.length === 0) return null;
+      if (participents.length === 0) {
+        return null;
+      }
 
       if (position === Positions.EVENT) {
         return (
@@ -72,14 +80,23 @@ export const Participents = ({ shift, allUsers }: IProps) => (
 );
 
 const UserTag = ({ user }: { user: TUser }) => {
+  const type = user.type === UserType.SQUAD ? "lite" : "warning";
+  const username = isDroneOperator(user)
+    ? `${user.username} 🚁`
+    : user.username;
+  console.log(user, user.type === UserType.BAR);
   if (user.phone) {
     return (
-      <Tag type="lite">
-        <UserLink href={`tel:${user.phone}`}>{user.username}</UserLink>
+      <Tag type={type} invert={user.type !== UserType.SQUAD}>
+        <UserLink href={`tel:${user.phone}`}>{username}</UserLink>
       </Tag>
     );
   } else {
-    return <Tag type="lite">{user.username}</Tag>;
+    return (
+      <Tag type={type} invert={user.type !== UserType.SQUAD}>
+        {username}
+      </Tag>
+    );
   }
 };
 
