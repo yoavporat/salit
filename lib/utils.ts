@@ -32,7 +32,13 @@ export enum Positions {
 export enum Status {
   AVAILABLE = "פעיל",
   UNAVAILABLE = "לא פעיל",
-  ONCALL = "מילואים",
+  ONCALL = "כונן",
+}
+
+export enum UserType {
+  SQUAD = "כיתת כוננות",
+  BAR = "בר שמירה",
+  DRONE = "רחפן",
 }
 
 export type TShiftParticipents = TShift & Array<string>;
@@ -40,7 +46,7 @@ export type TUser = {
   username: string;
   id: string;
   status: string;
-  type: string;
+  type: UserType;
   phone: string;
 };
 
@@ -143,7 +149,7 @@ export function getShiftParticipents(
 }
 
 export function getSquadMembers(users: TUser[]) {
-  return users.filter((user) => user.type === "כיתת כוננות");
+  return users.filter((user) => user.type === UserType.SQUAD);
 }
 
 export function getPageTitle(page: PageObjectResponse) {
@@ -186,4 +192,9 @@ export function generateGoogleCalendarLink({
   url.searchParams.append("sf", "true");
   url.searchParams.append("output", "xml");
   return url.toString();
+}
+
+export function isDroneOperator(user: TUser) {
+  const squadOperators = ["עידן אורן", "אושרי חפץ", "שי הרמן"];
+  return user.type === UserType.DRONE || squadOperators.includes(user.username);
 }
