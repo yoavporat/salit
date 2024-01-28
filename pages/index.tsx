@@ -11,6 +11,7 @@ import {
   Spacer,
   Spinner,
   Text,
+  Toggle
 } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
@@ -22,6 +23,7 @@ import {
   identifyShift,
   toDate,
   toTime,
+  shmirot
 } from "@/lib/utils";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
@@ -80,11 +82,28 @@ export default function Home(props: { users: Array<any> }) {
   };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
+    const [showShmirotOnly, setShowShmirotOnly ] = useState<boolean>(false);
+    let moreThanOneShift=true;
     if (props.shifts.length === 0) {
       return <NoShifts />;
     }
+    if (props.shifts.length === 1) {
+      moreThanOneShift=false;
+    }
     return (
-      <Collapse.Group>
+       <Collapse.Group>
+           { userId && moreThanOneShift && <Grid.Container gap={2} justify="flex-end" >
+              <Grid direction="row-reverse" >
+                <Text b>רק שמירות</Text>
+              </Grid>
+              <Grid direction="row-reverse" >
+                <Toggle
+                      checked={showShmirotOnly}
+                      scale={2}
+                      onChange={(ev: any) => setShowShmirotOnly(!showShmirotOnly)}
+                    />
+                </Grid> 
+          </Grid.Container> }
         {props.shifts &&
           props.shifts
             .slice(1)
@@ -94,7 +113,9 @@ export default function Home(props: { users: Array<any> }) {
                 shift={shift}
                 type={identifyShift(shift, userId)}
               />
-            ))}
+            ))
+            .filter((Shift)=>(
+              showShmirotOnly ? shmirot.includes(Shift.props.type.type): true))}
       </Collapse.Group>
     );
   };
