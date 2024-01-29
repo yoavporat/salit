@@ -84,7 +84,6 @@ const UserTag = ({ user }: { user: TUser }) => {
   const username = isDroneOperator(user)
     ? `${user.username} 🚁`
     : user.username;
-  console.log(user, user.type === UserType.BAR);
   if (user.phone) {
     return (
       <Tag type={type} invert={user.type !== UserType.SQUAD}>
