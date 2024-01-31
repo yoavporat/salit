@@ -50,22 +50,6 @@ const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
   const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   const theme = useTheme();
 
-  useEffect(() => {
-    const resizeOverride = (event: Event) => {
-      console.log("resizeOverride");
-      event.stopPropagation();
-      event.preventDefault();
-    };
-
-    if (windowWidth <= 375) {
-      window.addEventListener("resize", resizeOverride, { capture: true });
-    }
-
-    return () => {
-      window.removeEventListener("resize", resizeOverride);
-    };
-  }, [windowWidth]);
-
   return (
     <GaugeComponent
       value={Math.round((available.length / 23) * 100)}

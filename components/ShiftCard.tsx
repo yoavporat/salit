@@ -11,6 +11,7 @@ import { Card, Divider, Text } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "./Participants";
 import { ShiftActions } from "./ShiftActions";
+import { toDate } from "@/lib/utils";
 
 interface IProps {
   shift: PageObjectResponse;
@@ -28,9 +29,9 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
   const type = identifyShift(shift, userId);
   const isLive = new Date(time.start) < new Date();
   const end = time.end as string;
-  const timeString = `${toTime(end)} - ${toTime(time.start)} (${toRelativeTime(
-    isLive ? end : time.start
-  )})`;
+  const timeString = `${toDate(time.start)} @  ${toTime(end)} - ${toTime(
+    time.start
+  )}`;
   const title = isLive ? "המשמרת הנוכחית" : "המשמרת הבאה";
 
   const calData: TCalData = {
@@ -50,16 +51,25 @@ export const ShiftCard = ({ shift, userId, allUsers }: IProps) => {
         </Text>
       </Card.Content>
       <Divider h="1px" my={0} />
-      <Card.Content>
+      <Card.Content pb={2}>
         {type.name && (
-          <Text h3>
+          <Text h3 margin={0}>
             {type.type === "event" ? getPageTitle(shift) : type.name}
           </Text>
         )}
-        <Text h5>{timeString}</Text>
+        <Text h5 mb={2} mt={0}>
+          {timeString}
+        </Text>
         <Participents shift={shift} allUsers={allUsers} />
-        <ShiftActions calData={calData} />
       </Card.Content>
+      {!isLive && (
+        <>
+          <Divider h="1px" my={0} />
+          <Card.Content>
+            <ShiftActions calData={calData} transparent />
+          </Card.Content>
+        </>
+      )}
     </Card>
   );
 };

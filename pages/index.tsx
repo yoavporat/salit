@@ -5,6 +5,7 @@ import { Notion } from "@/lib/notion";
 import {
   Button,
   Collapse,
+  Divider,
   Grid,
   Select,
   Spacer,
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
+  UserType,
   getPageIcon,
   getPageTitle,
   getSquadMembers,
@@ -38,7 +40,7 @@ export default function Home(props: { users: Array<any> }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
     if (userId) {
@@ -153,7 +155,12 @@ export default function Home(props: { users: Array<any> }) {
         subtitle={props.type.type !== "unknown" && subtitle}
       >
         <Participents shift={props.shift} allUsers={allUsers} />
-        <ShiftActions calData={calData} disabled={isAnonymus} />
+        {isAnonymus ? null : (
+          <>
+            <Divider my={2} />
+            <ShiftActions calData={calData} />
+          </>
+        )}
       </Collapse>
     );
   };
@@ -190,7 +197,7 @@ export default function Home(props: { users: Array<any> }) {
     );
   };
 
-  if (!session) {
+  if (sessionStatus === "unauthenticated") {
     return <Unauthorized />;
   }
 
@@ -217,20 +224,24 @@ export default function Home(props: { users: Array<any> }) {
             </Grid>
           ) : (
             <>
-              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                <AvailabilityCard
-                  user={user}
-                  onToggle={onAvailabilityToggle}
-                  squadData={getSquadMembers(allUsers)}
-                />
-              </Grid>
-              <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                <ShiftCard
-                  shift={shifts[0]}
-                  userId={userId}
-                  allUsers={allUsers}
-                />
-              </Grid>
+              {user?.type === UserType.BAR ? null : (
+                <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                  <AvailabilityCard
+                    user={user}
+                    onToggle={onAvailabilityToggle}
+                    squadData={getSquadMembers(allUsers)}
+                  />
+                </Grid>
+              )}
+              {shifts.length > 0 && (
+                <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
+                  <ShiftCard
+                    shift={shifts[0]}
+                    userId={userId}
+                    allUsers={allUsers}
+                  />
+                </Grid>
+              )}
               <Grid className={`${styles.grid}`}>
                 <Shifts shifts={shifts} />
               </Grid>
@@ -263,10 +274,12 @@ const Loader = () => {
 
 const NoShifts = () => {
   return (
-    <>
-      <Text h1>🏝️</Text>
+    <Grid.Container direction="column" alignContent="center">
+      <Text h1 style={{ textAlign: "center" }}>
+        🏝️
+      </Text>
       <Text h3>אין משמרות</Text>
-    </>
+    </Grid.Container>
   );
 };
 
@@ -312,7 +325,7 @@ const Unauthorized = () => {
   );
 };
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const allUsers = await new Notion().getAllUsers();
   return {
     props: {
