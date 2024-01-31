@@ -1,7 +1,14 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export type TShift = {
-  type: "patrol" | "east" | "flowers" | "gate" | "drone" | "event" | "unknown";
+  type:
+    | "patrol"
+    | "oncall"
+    | "flowers"
+    | "gate"
+    | "drone"
+    | "event"
+    | "unknown";
   name: string;
   emoji: string;
 };
@@ -15,11 +22,23 @@ export type TCalData = {
 
 export enum Positions {
   PATROL = "סיור",
-  EAST = "מזרחי",
+  ONCALL = "כוננות",
   FLOWERS = "פרחים",
   GATE = "ש״ג",
   DRONE = "רחפן",
   EVENT = "אירוע",
+}
+
+export enum Status {
+  AVAILABLE = "פעיל",
+  UNAVAILABLE = "לא פעיל",
+  ONCALL = "כונן",
+}
+
+export enum UserType {
+  SQUAD = "כיתת כוננות",
+  BAR = "בר שמירה",
+  DRONE = "רחפן",
 }
 
 export type TShiftParticipents = TShift & Array<string>;
@@ -27,9 +46,13 @@ export type TUser = {
   username: string;
   id: string;
   status: string;
-  type: string;
+  type: UserType;
   phone: string;
 };
+
+function parseDate(date: Date) {
+  return date.toISOString().replace(/-|:|\.\d+/g, "");
+}
 
 export function toDate(date: string) {
   const options: Intl.DateTimeFormatOptions = {
@@ -52,8 +75,8 @@ export function toRelativeTime(date: string) {
   const rtf = new Intl.RelativeTimeFormat("he-IL", { numeric: "auto" });
   const elapsed = (new Date(date).getTime() - Date.now()) / 1000;
   const elapsedHours = Math.round(elapsed / 60 / 60);
-  return elapsedHours > 24
-    ? rtf.format(Math.round(elapsed / 60 / 60 / 24), "day")
+  return elapsedHours > 48
+    ? rtf.format(Math.round(elapsedHours / 24), "day")
     : rtf.format(Math.round(elapsedHours), "hour");
 }
 
@@ -62,40 +85,50 @@ export function identifyShift(
   userId: string
 ): TShift {
   if (
-    shift.properties["סיור"].type == "relation" &&
-    shift.properties["סיור"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.PATROL].type == "relation" &&
+    shift.properties[Positions.PATROL].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "patrol", name: "סיור", emoji: "🚔" };
+    return { type: "patrol", name: Positions.PATROL, emoji: "🚔" };
   }
   if (
-    shift.properties["מזרחי"].type == "relation" &&
-    shift.properties["מזרחי"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.ONCALL].type == "relation" &&
+    shift.properties[Positions.ONCALL].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "east", name: "מזרחי", emoji: "🕌" };
+    return { type: "oncall", name: Positions.ONCALL, emoji: "🐴" };
   }
   if (
-    shift.properties["פרחים"].type == "relation" &&
-    shift.properties["פרחים"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.FLOWERS].type == "relation" &&
+    shift.properties[Positions.FLOWERS].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "flowers", name: "פרחים", emoji: "🌷" };
+    return { type: "flowers", name: Positions.FLOWERS, emoji: "🌷" };
   }
   if (
-    shift.properties["רחפן"].type == "relation" &&
-    shift.properties["רחפן"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.DRONE].type == "relation" &&
+    shift.properties[Positions.DRONE].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "drone", name: "רחפן", emoji: "✈️" };
+    return { type: "drone", name: Positions.DRONE, emoji: "✈️" };
   }
   if (
-    shift.properties["אירוע"].type == "relation" &&
-    shift.properties["אירוע"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.EVENT].type == "relation" &&
+    shift.properties[Positions.EVENT].relation.some(
+      (user) => user.id === userId
+    )
   ) {
-    return { type: "event", name: "אירוע", emoji: "✨" };
+    return { type: "event", name: Positions.EVENT, emoji: "✨" };
   }
   if (
-    shift.properties["ש״ג"].type == "relation" &&
-    shift.properties["ש״ג"].relation.some((user) => user.id === userId)
+    shift.properties[Positions.GATE].type == "relation" &&
+    shift.properties[Positions.GATE].relation.some((user) => user.id === userId)
   ) {
-    return { type: "gate", name: "ש״ג", emoji: "🚧" };
+    return { type: "gate", name: Positions.GATE, emoji: "🚧" };
   }
   return { type: "unknown", name: "", emoji: "" };
 }
@@ -116,7 +149,7 @@ export function getShiftParticipents(
 }
 
 export function getSquadMembers(users: TUser[]) {
-  return users.filter((user) => user.type === "כיתת כוננות");
+  return users.filter((user) => user.type === UserType.SQUAD);
 }
 
 export function getPageTitle(page: PageObjectResponse) {
@@ -133,22 +166,35 @@ export function getPageIcon(page: PageObjectResponse, fallback: string) {
   return fallback;
 }
 
-export function generateCalendarLink({
+export function generateGoogleCalendarLink({
   title,
   startDate,
   endDate,
   description,
 }: TCalData) {
   const url = new URL("https://www.google.com/calendar/render");
-  const start = startDate.toISOString().replace(/-|:|\.\d+/g, "");
-  const end = endDate.toISOString().replace(/-|:|\.\d+/g, "");
 
   url.searchParams.append("action", "TEMPLATE");
   url.searchParams.append("text", title);
-  url.searchParams.append("dates", `${start}/${end}`);
+
+  // in case that there is an overlap, and a shift start in one day and ends in the next day,
+  // the endDate got the same day, so we add another day to the endDate
+  if (startDate > endDate) {
+    endDate.setDate(endDate.getDate() + 1);
+  }
+
+  url.searchParams.append(
+    "dates",
+    `${parseDate(startDate)}/${parseDate(endDate)}`
+  );
   description && url.searchParams.append("details", description);
   url.searchParams.append("location", "סלעית");
   url.searchParams.append("sf", "true");
   url.searchParams.append("output", "xml");
   return url.toString();
+}
+
+export function isDroneOperator(user: TUser) {
+  const squadOperators = ["עידן אורן", "אושרי חפץ", "שי הרמן"];
+  return user.type === UserType.DRONE || squadOperators.includes(user.username);
 }
