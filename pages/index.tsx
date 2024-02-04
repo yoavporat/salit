@@ -205,7 +205,7 @@ export default function Home(props: { users: Array<any> }) {
             </Grid>
           ) : (
             <>
-              {user?.type === UserType.BAR ? null : (
+              {user === undefined || user?.type === UserType.BAR ? null : (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
                   <AvailabilityCard userId={userId} />
                 </Grid>
