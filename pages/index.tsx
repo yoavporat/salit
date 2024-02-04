@@ -19,7 +19,6 @@ import {
   UserType,
   getPageIcon,
   getPageTitle,
-  getSquadMembers,
   identifyShift,
   toDate,
   toTime,
@@ -67,24 +66,6 @@ export default function Home(props: { users: Array<any> }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allUsers]);
-
-  const onAvailabilityToggle = (ev: any) => {
-    setUser(null);
-    fetch(`/api/availability?uid=${userId}`, {
-      method: "POST",
-      body: JSON.stringify({
-        available: ev.target.checked,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const updatedUser = allUsers.find((user) => user.id === userId);
-        updatedUser.status = data.status;
-        fetch("/api/users")
-          .then((res) => res.json())
-          .then((data) => setAllUsers(data.users));
-      });
-  };
 
   const onClear = () => {
     setUserId("");
@@ -226,11 +207,7 @@ export default function Home(props: { users: Array<any> }) {
             <>
               {user?.type === UserType.BAR ? null : (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                  <AvailabilityCard
-                    user={user}
-                    onToggle={onAvailabilityToggle}
-                    squadData={getSquadMembers(allUsers)}
-                  />
+                  <AvailabilityCard userId={userId} />
                 </Grid>
               )}
               {shifts.length > 0 && (

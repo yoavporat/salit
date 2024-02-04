@@ -1,5 +1,10 @@
 import { Client, isFullPage } from "@notionhq/client";
-import { Positions, TUser } from "./utils";
+import { Positions, Status, TUser } from "./utils";
+import {
+  GetDatabaseResponse,
+  GetPageResponse,
+  PageObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
 const ShiftsDB = "2564fd1207ab415386bac64fbb17a46c";
 const SadakDB = "b43d42afe4aa47d7ba2b863c4415e977";
@@ -22,28 +27,17 @@ export class Notion {
       ],
     });
 
-    return response.results.map((user) => {
-      if (
-        user.object === "page" &&
-        isFullPage(user) &&
-        "title" in user.properties.Name
-      ) {
-        return {
-          username: user.properties.Name.title[0].plain_text,
-          id: user.id,
-          status:
-            user.properties["סטטוס"].type === "status" &&
-            user.properties["סטטוס"].status?.name,
-          type:
-            user.properties["שיוך"].type === "multi_select" &&
-            user.properties["שיוך"].multi_select.length > 0 &&
-            user.properties["שיוך"].multi_select[0].name,
-          phone:
-            user.properties["טלפון"].type === "phone_number" &&
-            user.properties["טלפון"].phone_number,
-        };
-      }
-    }) as TUser[];
+    return response.results.map((user: GetPageResponse | GetDatabaseResponse) =>
+      parseUser(user)
+    ) as TUser[];
+  }
+
+  async getUser(userId: string): Promise<TUser | null> {
+    return parseUser(
+      await this.client.pages.retrieve({
+        page_id: userId,
+      })
+    );
   }
 
   async getUserShifts(userId: string) {
@@ -132,7 +126,22 @@ export class Notion {
     return response.results;
   }
 
-  async setUserStatus(userId: string, status: string) {
+  async getUserStatus(userId: string): Promise<Status> {
+    const resposnse = await this.client.pages.retrieve({
+      page_id: userId,
+    });
+    if (
+      resposnse.object === "page" &&
+      isFullPage(resposnse) &&
+      resposnse.properties["סטטוס"].type === "status"
+    ) {
+      return resposnse.properties["סטטוס"].status?.name as Status;
+    } else {
+      return Status.UNAVAILABLE;
+    }
+  }
+
+  async setUserStatus(userId: string, status: string): Promise<Status> {
     const resposnse = await this.client.pages.update({
       page_id: userId,
       properties: {
@@ -144,11 +153,39 @@ export class Notion {
         },
       },
     });
-    return (
+    if (
       resposnse.object === "page" &&
       isFullPage(resposnse) &&
-      resposnse.properties["סטטוס"].type === "status" &&
-      resposnse.properties["סטטוס"].status?.name
-    );
+      resposnse.properties["סטטוס"].type === "status"
+    ) {
+      return resposnse.properties["סטטוס"].status?.name as Status;
+    } else {
+      return Status.UNAVAILABLE;
+    }
+  }
+}
+
+function parseUser(page: GetPageResponse | GetDatabaseResponse): TUser | null {
+  if (
+    page.object === "page" &&
+    isFullPage(page) &&
+    "title" in page.properties.Name
+  ) {
+    return {
+      username: page.properties.Name.title[0].plain_text,
+      id: page.id,
+      status:
+        page.properties["סטטוס"].type === "status" &&
+        page.properties["סטטוס"].status?.name,
+      type:
+        page.properties["שיוך"].type === "multi_select" &&
+        page.properties["שיוך"].multi_select.length > 0 &&
+        page.properties["שיוך"].multi_select[0].name,
+      phone:
+        page.properties["טלפון"].type === "phone_number" &&
+        page.properties["טלפון"].phone_number,
+    } as TUser;
+  } else {
+    return null;
   }
 }
