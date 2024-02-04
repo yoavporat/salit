@@ -30,8 +30,9 @@ export enum Positions {
 }
 
 export enum Status {
-  AVAILABLE = "פעיל",
-  UNAVAILABLE = "לא פעיל",
+  AVAILABLE = "זמין",
+  UNAVAILABLE = "לא זמין",
+  OUTSIDE = "מחוץ למושב",
   ONCALL = "כונן",
 }
 
