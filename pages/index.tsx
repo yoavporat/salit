@@ -12,7 +12,7 @@ import {
   Spinner,
   Text,
 } from "@geist-ui/core";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TShift,
   TUser,
@@ -38,26 +38,9 @@ export default function Home(props: { users: Array<any> }) {
   const [user, setUser] = useState<TUser | null>();
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [allUsers, setAllUsers] = useState<Array<TUser>>();
+  const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
 
   const { data: session, status: sessionStatus } = useSession();
-
-  const getCurrentUser = () => {
-    return allUsers?.find((user) => user.id === userId);
-  };
-
-  const showLoader = useMemo(() => {
-    return loading || allUsers === undefined;
-  }, [loading, allUsers]);
-
-  useEffect(() => {
-    if (session) {
-      setLoading(true);
-      fetch("/api/users")
-        .then((res) => res.json())
-        .then((data) => setAllUsers(data.users));
-    }
-  }, [session]);
 
   useEffect(() => {
     if (userId) {
@@ -67,7 +50,7 @@ export default function Home(props: { users: Array<any> }) {
         .then((data) => {
           localStorage.setItem("salit-uid", userId);
           setShifts(data.shifts);
-          setUser(getCurrentUser());
+          setUser(allUsers.find((user) => user.id === userId));
           setLoading(false);
         });
     }
@@ -78,7 +61,7 @@ export default function Home(props: { users: Array<any> }) {
     const uid = localStorage.getItem("salit-uid");
     if (uid) {
       setUserId(uid);
-      setUser(getCurrentUser());
+      setUser(allUsers.find((user) => user.id === userId));
     } else {
       onClear();
     }
@@ -95,8 +78,8 @@ export default function Home(props: { users: Array<any> }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        const updatedUser = getCurrentUser();
-        updatedUser ? (updatedUser.status = data.status) : null;
+        const updatedUser = allUsers.find((user) => user.id === userId);
+        updatedUser.status = data.status;
         fetch("/api/users")
           .then((res) => res.json())
           .then((data) => setAllUsers(data.users));
@@ -141,7 +124,7 @@ export default function Home(props: { users: Array<any> }) {
       props.shift.properties["זמן"].date;
     const isAnonymus = props.type.type === "unknown";
 
-    if (!time || allUsers === undefined) {
+    if (!time) {
       return null;
     }
 
@@ -235,7 +218,7 @@ export default function Home(props: { users: Array<any> }) {
             <Text h1>רשימת שמירה</Text>
           </Grid>
           <SearchRow />
-          {showLoader ? (
+          {loading ? (
             <Grid>
               <Loader />
             </Grid>
@@ -246,7 +229,7 @@ export default function Home(props: { users: Array<any> }) {
                   <AvailabilityCard
                     user={user}
                     onToggle={onAvailabilityToggle}
-                    squadData={getSquadMembers(allUsers as TUser[])}
+                    squadData={getSquadMembers(allUsers)}
                   />
                 </Grid>
               )}
@@ -255,7 +238,7 @@ export default function Home(props: { users: Array<any> }) {
                   <ShiftCard
                     shift={shifts[0]}
                     userId={userId}
-                    allUsers={allUsers as TUser[]}
+                    allUsers={allUsers}
                   />
                 </Grid>
               )}
