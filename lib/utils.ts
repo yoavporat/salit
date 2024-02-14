@@ -196,6 +196,6 @@ export function generateGoogleCalendarLink({
 }
 
 export function isDroneOperator(user: TUser) {
-  const squadOperators = ["עידן אורן", "אושרי חפץ", "שי הרמן"];
+  const squadOperators = ["עידן אורן", "אושרי חפץ", "שי הרמן", "יואב פורת"];
   return user.type === UserType.DRONE || squadOperators.includes(user.username);
 }
