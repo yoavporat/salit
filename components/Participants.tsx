@@ -80,7 +80,7 @@ export const Participents = ({ shift, allUsers }: IProps) => (
 );
 
 const UserTag = ({ user }: { user: TUser }) => {
-  const type = user.type === UserType.SQUAD ? "lite" : "warning";
+  const type = user?.type === UserType.SQUAD ? "lite" : "warning";
   const username = isDroneOperator(user)
     ? `${user.username} 🚁`
     : user.username;
