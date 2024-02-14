@@ -186,6 +186,7 @@ function parseUser(page: GetPageResponse | GetDatabaseResponse): TUser | null {
         page.properties["טלפון"].phone_number,
     } as TUser;
   } else {
+    console.error("Failed to parse user", page.id);
     return null;
   }
 }
