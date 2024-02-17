@@ -42,7 +42,15 @@ export enum UserType {
   DRONE = "רחפן",
 }
 
-export let shmirot = ["patrol", "flowers", "gate", "drone"];
+export enum positonsTypes {
+    PATROL = "patrol",
+    ONCALL = "oncall",
+    FLOWERS = "flowers",
+    GATE = "gate",
+    DRONE = "drone",
+    EVENT = "event",
+    UNKNOWN = "unknown"
+};
 
 export type TShiftParticipents = TShift & Array<string>;
 export type TUser = {
