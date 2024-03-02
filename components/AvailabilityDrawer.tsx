@@ -1,7 +1,7 @@
 import { TUser, getSquadMembers } from "@/lib/utils";
-import { Divider, Spinner, useTheme, Text, Grid, Spacer } from "@geist-ui/core";
+import { Spinner, useTheme, Grid, Collapse } from "@geist-ui/core";
 import dynamic from "next/dynamic";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import UserTag from "./UserTag";
 
@@ -64,13 +64,8 @@ const AvailabilityDrawer = () => {
           type: "blob",
         }}
       />
-      <Divider />
-      <Grid.Container gap={2} direction="column" alignItems="flex-start">
-        <Grid>
-          <Text b>זמינים</Text>
-          <Text b>{` (${available.length})`}</Text>
-        </Grid>
-        <Grid>
+      <Collapse.Group>
+        <Collapse title={`זמינים (${available.length})`}>
           <Grid.Container gap={1}>
             {available.map((user) => (
               <Grid key={user.id}>
@@ -78,12 +73,8 @@ const AvailabilityDrawer = () => {
               </Grid>
             ))}
           </Grid.Container>
-        </Grid>
-        <Grid>
-          <Text b>לא זמינים</Text>
-          <Text b>{` (${unavailable.length})`}</Text>
-        </Grid>
-        <Grid>
+        </Collapse>
+        <Collapse title={`לא זמינים (${unavailable.length})`}>
           <Grid.Container gap={1}>
             {unavailable.map((user) => (
               <Grid key={user.id}>
@@ -91,8 +82,8 @@ const AvailabilityDrawer = () => {
               </Grid>
             ))}
           </Grid.Container>
-        </Grid>
-      </Grid.Container>
+        </Collapse>
+      </Collapse.Group>
     </>
   );
 };
