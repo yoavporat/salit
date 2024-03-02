@@ -152,7 +152,7 @@ export default function Home(props: { users: Array<any> }) {
   const SearchRow = () => {
     return (
       <Grid.Container gap={1} justify="center" style={{ padding: PADDING }}>
-        <Grid xs={20}>
+        <Grid style={{ flexGrow: 1 }}>
           <Select
             placeholder="שם"
             onChange={(e) => setUserId(e as string)}
@@ -167,7 +167,7 @@ export default function Home(props: { users: Array<any> }) {
             ))}
           </Select>
         </Grid>
-        <Grid xs={4}>
+        <Grid>
           <Button
             iconRight={<Eye />}
             height="50px"
