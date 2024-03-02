@@ -40,7 +40,7 @@ export default function Home(props: { users: Array<any> }) {
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
-  const [state, setState] = useState(false);
+  const [isAvailabilityDrawerOpen, setAvailabilityDrawerOpen] = useState(false);
 
   const { data: session, status: sessionStatus } = useSession();
 
@@ -212,7 +212,7 @@ export default function Home(props: { users: Array<any> }) {
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
                   <AvailabilityCard
                     userId={userId}
-                    openDrawer={() => setState(true)}
+                    openDrawer={() => setAvailabilityDrawerOpen(true)}
                   />
                 </Grid>
               )}
@@ -242,8 +242,8 @@ export default function Home(props: { users: Array<any> }) {
           )}
         </Grid.Container>
         <Drawer
-          visible={state}
-          onClose={() => setState(false)}
+          visible={isAvailabilityDrawerOpen}
+          onClose={() => setAvailabilityDrawerOpen(false)}
           placement="bottom"
         >
           <Drawer.Title>זמינות</Drawer.Title>

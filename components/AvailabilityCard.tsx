@@ -1,5 +1,6 @@
 import { TUser } from "@/lib/utils";
 import { Card, Grid, Text, Toggle, Spinner, Button } from "@geist-ui/core";
+import { Activity } from "@geist-ui/icons";
 import { useEffect, useState } from "react";
 
 interface IProps {
@@ -35,15 +36,13 @@ export const AvailabilityCard = ({ userId, openDrawer }: IProps) => {
   return (
     <Card>
       <Grid.Container gap={2} justify="space-between" alignItems="center">
-        <Grid xs={8}>
+        <Grid>
+          <Button auto onClick={openDrawer} iconRight={<Activity />} />
+        </Grid>
+        <Grid style={{ flexGrow: 1 }}>
           {Boolean(user) ? <Text b>{user?.status}</Text> : <Spinner />}
         </Grid>
-        <Grid xs={8}>
-          <Button auto onClick={openDrawer}>
-            G
-          </Button>
-        </Grid>
-        <Grid direction="row-reverse" xs={8}>
+        <Grid direction="row-reverse">
           <Toggle
             checked={user?.status === "זמין"}
             scale={2}
