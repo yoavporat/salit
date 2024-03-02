@@ -5,6 +5,7 @@ export type TShift = {
     | "patrol"
     | "oncall"
     | "flowers"
+    | "east"
     | "gate"
     | "drone"
     | "event"
@@ -26,6 +27,7 @@ export enum Positions {
   FLOWERS = "פרחים",
   GATE = "ש״ג",
   DRONE = "רחפן",
+  EAST = "מזרחי",
   EVENT = "אירוע",
 }
 
@@ -109,6 +111,12 @@ export function identifyShift(
     )
   ) {
     return { type: "flowers", name: Positions.FLOWERS, emoji: "🌷" };
+  }
+  if (
+    shift.properties[Positions.EAST].type == "relation" &&
+    shift.properties[Positions.EAST].relation.some((user) => user.id === userId)
+  ) {
+    return { type: "east", name: Positions.EAST, emoji: "🕌" };
   }
   if (
     shift.properties[Positions.DRONE].type == "relation" &&
