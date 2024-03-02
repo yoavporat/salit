@@ -1,10 +1,4 @@
-import {
-  Positions,
-  TUser,
-  UserType,
-  getShiftParticipents,
-  isDroneOperator,
-} from "@/lib/utils";
+import { Positions, TUser, UserType, getShiftParticipents } from "@/lib/utils";
 import { Grid, Tag, Text, User } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import styled from "styled-components";
@@ -81,9 +75,7 @@ export const Participents = ({ shift, allUsers }: IProps) => (
 
 const UserTag = ({ user }: { user: TUser }) => {
   const type = user?.type === UserType.SQUAD ? "lite" : "warning";
-  const username = isDroneOperator(user)
-    ? `${user.username} 🚁`
-    : user.username;
+  const username = user.isDroneOperator ? `${user.username} 🚁` : user.username;
   if (user.phone) {
     return (
       <Tag type={type} invert={user.type !== UserType.SQUAD}>

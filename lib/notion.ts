@@ -184,6 +184,9 @@ function parseUser(page: GetPageResponse | GetDatabaseResponse): TUser | null {
       phone:
         page.properties["טלפון"].type === "phone_number" &&
         page.properties["טלפון"].phone_number,
+      isDroneOperator:
+        page.properties["רחפן"].type === "checkbox" &&
+        page.properties["רחפן"].checkbox,
     } as TUser;
   } else {
     console.error("Failed to parse user", page.id);

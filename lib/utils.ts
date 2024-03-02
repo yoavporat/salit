@@ -49,6 +49,7 @@ export type TUser = {
   status: string;
   type: UserType;
   phone: string;
+  isDroneOperator: boolean;
 };
 
 function parseDate(date: Date) {
@@ -193,9 +194,4 @@ export function generateGoogleCalendarLink({
   url.searchParams.append("sf", "true");
   url.searchParams.append("output", "xml");
   return url.toString();
-}
-
-export function isDroneOperator(user: TUser) {
-  const squadOperators = ["עידן אורן", "אושרי חפץ", "שי הרמן", "יואב פורת"];
-  return user.type === UserType.DRONE || squadOperators.includes(user.username);
 }
