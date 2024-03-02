@@ -74,6 +74,12 @@ export class Notion {
                 },
               },
               {
+                property: Positions.EAST,
+                relation: {
+                  contains: userId,
+                },
+              },
+              {
                 property: Positions.GATE,
                 relation: {
                   contains: userId,

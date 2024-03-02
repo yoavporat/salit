@@ -16,6 +16,7 @@ const ActivePositions = [
   Positions.DRONE,
   Positions.EVENT,
   Positions.ONCALL,
+  Positions.EAST,
 ];
 
 export const Participents = ({ shift, allUsers }: IProps) => (
