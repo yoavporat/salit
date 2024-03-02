@@ -42,13 +42,13 @@ export const AvailabilityCard = ({ userId, openDrawer }: IProps) => {
         <Grid style={{ flexGrow: 1 }}>
           {Boolean(user) ? <Text b>{user?.status}</Text> : <Spinner />}
         </Grid>
-        <Grid direction="row-reverse">
-          <Toggle
-            checked={user?.status === "זמין"}
-            scale={2}
-            onChange={onAvailabilityToggle}
-          />
-        </Grid>
+        <Toggle
+          checked={user?.status === "זמין"}
+          onChange={onAvailabilityToggle}
+          ml="16px"
+          my="auto"
+          scale={2}
+        />
       </Grid.Container>
     </Card>
   );
