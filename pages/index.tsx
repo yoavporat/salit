@@ -245,6 +245,7 @@ export default function Home(props: { users: Array<any> }) {
           visible={isAvailabilityDrawerOpen}
           onClose={() => setAvailabilityDrawerOpen(false)}
           placement="bottom"
+          style={{ maxHeight: "75vh" }}
         >
           <Drawer.Title>זמינות</Drawer.Title>
           <Drawer.Content>
