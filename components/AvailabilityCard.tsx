@@ -1,17 +1,13 @@
 import { TUser } from "@/lib/utils";
-import { Card, Grid, Text, Toggle, Spinner, useTheme } from "@geist-ui/core";
-import dynamic from "next/dynamic";
+import { Card, Grid, Text, Toggle, Spinner, Button } from "@geist-ui/core";
 import { useEffect, useState } from "react";
-
-const GaugeComponent = dynamic(() => import("react-gauge-component"), {
-  ssr: false,
-});
 
 interface IProps {
   userId: string;
+  openDrawer: () => void;
 }
 
-export const AvailabilityCard = ({ userId }: IProps) => {
+export const AvailabilityCard = ({ userId, openDrawer }: IProps) => {
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {
@@ -39,8 +35,13 @@ export const AvailabilityCard = ({ userId }: IProps) => {
   return (
     <Card>
       <Grid.Container gap={2} justify="space-between" alignItems="center">
-        <Grid xs={16}>
+        <Grid xs={8}>
           {Boolean(user) ? <Text b>{user?.status}</Text> : <Spinner />}
+        </Grid>
+        <Grid xs={8}>
+          <Button auto onClick={openDrawer}>
+            G
+          </Button>
         </Grid>
         <Grid direction="row-reverse" xs={8}>
           <Toggle
@@ -51,48 +52,5 @@ export const AvailabilityCard = ({ userId }: IProps) => {
         </Grid>
       </Grid.Container>
     </Card>
-  );
-};
-
-const AvailabilityGuage = ({ data }: { data: TUser[] }) => {
-  const [squadMembers, setSquadMembers] = useState<TUser[]>([]);
-  const available = data.filter((user) => user.status === "זמין");
-  const theme = useTheme();
-
-  // useEffect(() => {
-  //   fetch("/api/users")
-  //     .then((res) => res.json())
-  //     .then((data) => setSquadMembers(getSquadMembers(data.users)));
-  // }, [user]);
-
-  return (
-    <GaugeComponent
-      value={Math.round((available.length / 23) * 100)}
-      type="semicircle"
-      arc={{
-        nbSubArcs: 2,
-        subArcs: [
-          { limit: 50, color: theme.palette.alert },
-          { limit: 100, color: theme.palette.success },
-        ],
-        padding: 0.02,
-        width: 0.12,
-      }}
-      labels={{
-        tickLabels: {
-          type: "inner",
-          hideMinMax: true,
-        },
-        valueLabel: {
-          style: {
-            textShadow: "unset",
-            fill: "unset",
-          },
-        },
-      }}
-      pointer={{
-        type: "blob",
-      }}
-    />
   );
 };

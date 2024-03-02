@@ -6,6 +6,7 @@ import {
   Button,
   Collapse,
   Divider,
+  Drawer,
   Grid,
   Select,
   Spacer,
@@ -29,6 +30,7 @@ import { ShiftCard } from "@/components/ShiftCard";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
 import { Eye } from "@geist-ui/icons";
 import { ShiftActions } from "@/components/ShiftActions";
+import AvailabilityDrawer from "@/components/AvailabilityDrawer";
 
 const PADDING = "0 12px";
 
@@ -38,6 +40,7 @@ export default function Home(props: { users: Array<any> }) {
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
+  const [state, setState] = useState(false);
 
   const { data: session, status: sessionStatus } = useSession();
 
@@ -207,7 +210,10 @@ export default function Home(props: { users: Array<any> }) {
             <>
               {user === undefined || user?.type === UserType.BAR ? null : (
                 <Grid className={`${styles.grid}`} style={{ padding: PADDING }}>
-                  <AvailabilityCard userId={userId} />
+                  <AvailabilityCard
+                    userId={userId}
+                    openDrawer={() => setState(true)}
+                  />
                 </Grid>
               )}
               {shifts.length > 0 && (
@@ -235,6 +241,16 @@ export default function Home(props: { users: Array<any> }) {
             </>
           )}
         </Grid.Container>
+        <Drawer
+          visible={state}
+          onClose={() => setState(false)}
+          placement="bottom"
+        >
+          <Drawer.Title>זמינות</Drawer.Title>
+          <Drawer.Content>
+            <AvailabilityDrawer />
+          </Drawer.Content>
+        </Drawer>
       </main>
     </>
   );
