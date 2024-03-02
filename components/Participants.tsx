@@ -2,6 +2,7 @@ import { Positions, TUser, UserType, getShiftParticipents } from "@/lib/utils";
 import { Grid, Tag, Text, User } from "@geist-ui/core";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import styled from "styled-components";
+import UserTag from "./UserTag";
 
 interface IProps {
   shift: PageObjectResponse;
@@ -72,28 +73,6 @@ export const Participents = ({ shift, allUsers }: IProps) => (
     })}
   </Grid.Container>
 );
-
-const UserTag = ({ user }: { user: TUser }) => {
-  const type = user?.type === UserType.SQUAD ? "lite" : "warning";
-  const username = user.isDroneOperator ? `${user.username} 🚁` : user.username;
-  if (user.phone) {
-    return (
-      <Tag type={type} invert={user.type !== UserType.SQUAD}>
-        <UserLink href={`tel:${user.phone}`}>{username}</UserLink>
-      </Tag>
-    );
-  } else {
-    return (
-      <Tag type={type} invert={user.type !== UserType.SQUAD}>
-        {username}
-      </Tag>
-    );
-  }
-};
-
-const UserLink = styled.a`
-  color: inherit;
-`;
 
 const Wrapper = styled.div`
   display: flex;
