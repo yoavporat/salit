@@ -203,3 +203,28 @@ export function generateGoogleCalendarLink({
   url.searchParams.append("output", "xml");
   return url.toString();
 }
+
+export function generateOutlookLink({
+  title,
+  startDate,
+  endDate,
+  description,
+}: TCalData) {
+  const url = new URL("https://outlook.live.com/calendar/0/action/compose");
+  url.searchParams.append("allday", "false");
+  url.searchParams.append("subject", title);
+  url.searchParams.append("rru", "addevent");
+  url.searchParams.append("path", "/calendar/action/compose");
+  url.searchParams.append("location", "סלעית");
+
+  // in case that there is an overlap, and a shift start in one day and ends in the next day,
+  // the endDate got the same day, so we add another day to the endDate
+  if (startDate > endDate) {
+    endDate.setDate(endDate.getDate() + 1);
+  }
+
+  url.searchParams.append("enddt", `${parseDate(endDate)}`);
+  url.searchParams.append("startdt", `${parseDate(endDate)}`);
+  description && url.searchParams.append("body", description);
+  return url.toString();
+}
