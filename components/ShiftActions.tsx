@@ -34,6 +34,7 @@ export const ShiftActions = ({ calData, transparent }: IProps) => {
               width="50px"
               padding={0}
               type={transparent ? "success" : "default"}
+              style={{ maxWidth: "50px" }}
             />
           </Grid>
           <Grid>
@@ -51,6 +52,7 @@ export const ShiftActions = ({ calData, transparent }: IProps) => {
               width="50px"
               padding={0}
               type={transparent ? "success" : "default"}
+              style={{ maxWidth: "50px" }}
             />
           </Grid>
         </Grid.Container>
