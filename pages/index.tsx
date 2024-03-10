@@ -12,6 +12,8 @@ import {
   Spacer,
   Spinner,
   Text,
+  Toggle,
+  Checkbox
 } from "@geist-ui/core";
 import { useEffect, useState } from "react";
 import {
@@ -23,6 +25,8 @@ import {
   identifyShift,
   toDate,
   toTime,
+  Positions,
+  positonsTypes
 } from "@/lib/utils";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Participents } from "@/components/Participants";
@@ -83,11 +87,22 @@ export default function Home(props: { users: Array<any> }) {
   };
 
   const Shifts = (props: { shifts: Array<PageObjectResponse> }) => {
+    const [filterdShifts, setFilterdShifts ] = useState(Object.values(positonsTypes));
     if (props.shifts.length === 0) {
       return <NoShifts />;
     }
     return (
-      <Collapse.Group>
+       <Collapse.Group>
+            {userId && <Collapse title="סינון" >
+              <Checkbox.Group value={Object.values(positonsTypes)}  onChange={(ev: any) => setFilterdShifts(ev)} style={{direction: "ltr"}}>
+                <Checkbox value = {positonsTypes.PATROL} > {Positions.PATROL} </Checkbox>
+                <Checkbox value = {positonsTypes.GATE} > {Positions.GATE} </Checkbox>
+                <Checkbox value = {positonsTypes.FLOWERS} > {Positions.FLOWERS} </Checkbox>
+                <Checkbox value = {positonsTypes.DRONE} > {Positions.DRONE} </Checkbox>
+                <Checkbox value = {positonsTypes.ONCALL} > {Positions.ONCALL} </Checkbox>
+                <Checkbox value = {positonsTypes.EVENT} > {Positions.EVENT} </Checkbox>
+              </Checkbox.Group>
+            </Collapse>}
         {props.shifts &&
           props.shifts
             .slice(1)
@@ -97,7 +112,9 @@ export default function Home(props: { users: Array<any> }) {
                 shift={shift}
                 type={identifyShift(shift, userId)}
               />
-            ))}
+            ))
+            .filter((Shift)=>(
+              filterdShifts.includes(Shift.props.type.type)))}
       </Collapse.Group>
     );
   };
