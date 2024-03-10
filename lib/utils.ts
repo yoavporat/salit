@@ -210,7 +210,7 @@ export function generateOutlookLink({
   endDate,
   description,
 }: TCalData) {
-  const url = new URL("https://outlook.live.com/calendar/0/action/compose");
+  const url = new URL("https://outlook.office.com/calendar/0/action/compose");
   url.searchParams.append("allday", "false");
   url.searchParams.append("subject", title);
   url.searchParams.append("rru", "addevent");
