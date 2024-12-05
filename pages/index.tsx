@@ -18,6 +18,7 @@ import {
   TShift,
   TUser,
   UserType,
+  getDraftedMembers,
   getPageIcon,
   getPageTitle,
   identifyShift,
@@ -39,7 +40,7 @@ export default function Home(props: { users: Array<any> }) {
   const [user, setUser] = useState<TUser | null>();
   const [shifts, setShifts] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [allUsers, setAllUsers] = useState<Array<any>>(props.users);
+  const [allUsers, setAllUsers] = useState<Array<TUser>>(props.users);
   const [isAvailabilityDrawerOpen, setAvailabilityDrawerOpen] = useState(false);
 
   const { data: session, status: sessionStatus } = useSession();

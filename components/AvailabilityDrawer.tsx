@@ -1,4 +1,4 @@
-import { TUser, getSquadMembers } from "@/lib/utils";
+import { TUser, getDraftedMembers } from "@/lib/utils";
 import { Spinner, useTheme, Grid, Collapse } from "@geist-ui/core";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -11,18 +11,18 @@ const GaugeComponent = dynamic(() => import("react-gauge-component"), {
 
 const AvailabilityDrawer = () => {
   const [squadMembers, setSquadMembers] = useState<TUser[]>([]);
-  const [available, setavailable] = useState<TUser[]>([]);
+  const [available, setAvailable] = useState<TUser[]>([]);
   const [unavailable, setUnavailable] = useState<TUser[]>([]);
   const theme = useTheme();
 
   useEffect(() => {
     fetch("/api/users")
       .then((res) => res.json())
-      .then((data) => setSquadMembers(getSquadMembers(data.users)));
+      .then((data) => setSquadMembers(getDraftedMembers(data.users)));
   }, []);
 
   useEffect(() => {
-    setavailable(squadMembers.filter((user) => user.status === "זמין"));
+    setAvailable(squadMembers.filter((user) => user.status === "זמין"));
     setUnavailable(squadMembers.filter((user) => user.status !== "זמין"));
   }, [squadMembers]);
 
@@ -37,7 +37,7 @@ const AvailabilityDrawer = () => {
   return (
     <>
       <GaugeComponent
-        value={Math.round((available.length / 23) * 100)}
+        value={Math.round((available.length / squadMembers.length) * 100)}
         type="semicircle"
         arc={{
           nbSubArcs: 2,

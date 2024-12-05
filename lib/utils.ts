@@ -52,6 +52,7 @@ export type TUser = {
   type: UserType;
   phone: string;
   isDroneOperator: boolean;
+  drafted: boolean;
 };
 
 function parseDate(date: Date) {
@@ -160,6 +161,10 @@ export function getShiftParticipents(
 
 export function getSquadMembers(users: TUser[]) {
   return users.filter((user) => user.type === UserType.SQUAD);
+}
+
+export function getDraftedMembers(users: TUser[]) {
+  return users.filter((user) => user.drafted);
 }
 
 export function getPageTitle(page: PageObjectResponse) {

@@ -193,6 +193,9 @@ function parseUser(page: GetPageResponse | GetDatabaseResponse): TUser | null {
       isDroneOperator:
         page.properties["רחפן"].type === "checkbox" &&
         page.properties["רחפן"].checkbox,
+      drafted: 
+        page.properties["מגוייס"].type === "checkbox" && 
+        page.properties["מגוייס"].checkbox,
     } as TUser;
   } else {
     console.error("Failed to parse user", page.id);
