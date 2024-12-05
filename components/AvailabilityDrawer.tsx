@@ -42,7 +42,7 @@ const AvailabilityDrawer = () => {
         arc={{
           nbSubArcs: 2,
           subArcs: [
-            { limit: 50, color: theme.palette.alert },
+            { limit: 60, color: theme.palette.alert },
             { limit: 100, color: theme.palette.success },
           ],
           padding: 0.02,
