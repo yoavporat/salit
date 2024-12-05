@@ -40,9 +40,8 @@ const AvailabilityDrawer = () => {
         value={Math.round((available.length / squadMembers.length) * 100)}
         type="semicircle"
         arc={{
-          nbSubArcs: 2,
           subArcs: [
-            { limit: 60, color: theme.palette.alert },
+            { limit: 40, color: theme.palette.alert },
             { limit: 100, color: theme.palette.success },
           ],
           padding: 0.02,
@@ -54,6 +53,7 @@ const AvailabilityDrawer = () => {
             hideMinMax: true,
           },
           valueLabel: {
+            matchColorWithArc: true,
             style: {
               textShadow: "unset",
               fill: "unset",
