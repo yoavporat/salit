@@ -1,4 +1,4 @@
-import { TUser, getDraftedMembers } from "@/lib/utils";
+import { TUser } from "@/lib/utils";
 import { Spinner, useTheme, Grid, Collapse } from "@geist-ui/core";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -16,9 +16,9 @@ const AvailabilityDrawer = () => {
   const theme = useTheme();
 
   useEffect(() => {
-    fetch("/api/users")
+    fetch("/api/users?drafted=true")
       .then((res) => res.json())
-      .then((data) => setSquadMembers(getDraftedMembers(data.users)));
+      .then((data) => setSquadMembers(data.users));
   }, []);
 
   useEffect(() => {

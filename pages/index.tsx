@@ -18,7 +18,6 @@ import {
   TShift,
   TUser,
   UserType,
-  getDraftedMembers,
   getPageIcon,
   getPageTitle,
   identifyShift,

@@ -163,10 +163,6 @@ export function getSquadMembers(users: TUser[]) {
   return users.filter((user) => user.type === UserType.SQUAD);
 }
 
-export function getDraftedMembers(users: TUser[]) {
-  return users.filter((user) => user.drafted);
-}
-
 export function getPageTitle(page: PageObjectResponse) {
   if (page.properties["משמרת"].type === "title") {
     return page.properties["משמרת"].title[0].plain_text;

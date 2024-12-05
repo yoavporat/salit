@@ -32,6 +32,28 @@ export class Notion {
     ) as TUser[];
   }
 
+  async getAllDraftedUsers(): Promise<TUser[]> {
+    const response = await this.client.databases.query({
+      database_id: SadakDB,
+      sorts: [
+        {
+          property: "Name",
+          direction: "ascending",
+        },
+      ],
+      filter: {
+        property: "מגוייס",
+        checkbox: {
+          equals: true,
+        },
+      },
+    });
+
+    return response.results.map((user: GetPageResponse | GetDatabaseResponse) =>
+      parseUser(user)
+    ) as TUser[];
+  }
+
   async getUser(userId: string): Promise<TUser | null> {
     return parseUser(
       await this.client.pages.retrieve({

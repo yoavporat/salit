@@ -11,6 +11,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const userId = req.query.uid as string;
+  const draftedOnly = req.query.drafted as string;
   if (userId) {
     const user = await new Notion().getUser(userId);
     if (user) {
@@ -19,7 +20,8 @@ export default async function handler(
       res.status(404).json({ users: [] });
     }
   } else {
-    const users = await new Notion().getAllUsers();
+    const notion = new Notion();
+    const users = await (Boolean(draftedOnly) ? notion.getAllDraftedUsers() : notion.getAllUsers());
     res.status(200).json({ users });
   }
 }
